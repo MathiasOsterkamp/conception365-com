@@ -1,0 +1,124 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:site_name" content="Mathias Osterkamp"><meta property="og:type" content="article"><meta property="og:image" content="https://conception365.com/"><meta property="twitter:image" content="https://conception365.com/"><meta name=title content="Managed Metadata Migration"><meta property="og:title" content="Managed Metadata Migration"><meta property="twitter:title" content="Managed Metadata Migration"><meta name=description content><meta property="og:description" content><meta property="twitter:description" content><meta property="twitter:card" content="summary"><meta name=keyword content="SharePoint, Microsoft, Office 365, Teams, Azure, Webdevelopment"><link rel="shortcut icon" href=/img/favicon.ico><title>Managed Metadata Migration-Mathias Osterkamp</title><link rel=canonical href=/post/2020-12-12-managed-metadata-migration/><link rel=stylesheet href=/css/montserrat-webfont.min.css><link rel=stylesheet href=/css/iDisqus.min.css><link rel=stylesheet href=/css/bootstrap.min.css><link rel=stylesheet href=/css/hux-blog.css><link rel=stylesheet href=/css/zanshang.css><link rel=stylesheet href=/css/fontawesome-all.min.css><script src=/js/jquery.min.js></script><script src=/js/bootstrap.min.js></script><script src=/js/hux-blog.min.js></script></head><style type=text/css>header.intro-header{background-image:url('/')}</style><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=post-heading><h1>Managed Metadata Migration</h1></div></div></div></div></header><nav class="navbar navbar-default navbar-custom"><div class=container><div class="navbar-header page-scroll"><button type=button class=navbar-toggle>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav"><li><a href=/>Home</a></li><li><a href=/categories/administration>administration</a></li><li><a href=/top/about/>ABOUT ME</a></li><li><a href=/top/impressum/>Impressum</a></li></ul></div></div></div></nav><script>var $body=document.body;var $toggle=document.querySelector('.navbar-toggle');var $navbar=document.querySelector('#huxblog_navbar');var $collapse=document.querySelector('.navbar-collapse');$toggle.addEventListener('click',handleMagic)
+function handleMagic(e){if($navbar.className.indexOf('in')>0){$navbar.className=" ";setTimeout(function(){if($navbar.className.indexOf('in')<0){$collapse.style.height="0px"}},400)}else{$collapse.style.height="auto"
+$navbar.className+=" in";}}</script><article><div class=container><div class=row><div class="col-lg-8
+col-md-8
+post-container"><div class=post-preview><h2 class=post-subtitle>Secrets about SharePoint Taxonomyies</h2><span class=post-meta>Posted by
+Mathias Osterkamp
+on
+Saturday, December 12, 2020</span></div><h1 id=managed-metadata-migration>Managed Metadata Migration</h1><p>Managed metadata is a formal taxonomy classification system. A taxonomy groups the words, labels, and terms that describe something, and then arranges the groups into a hierarchy. You can learn more basics and wordings on <a href=https://docs.microsoft.com/en-us/sharepoint/managed-metadata>microsoft docs</a>. Mostly it is simple called term store.</p><h2 id=where-are-my-data-stored>Where are my data stored?</h2><p>The first common question for migration is, where actual the term store data are stored. The short answer is, <strong>everything important is stored in Managed Metadata SQL Database</strong> of the service application. To get a bit deeper look we have to analyze the field structure.</p><h2 id=how-the-fields-are-structured>How the fields are structured?</h2><p>A typical Sharepoint taxonomy field looks the following way (<a href=https://www.andrewconnell.com/sharepoint-2010-managed-metadata-in-depth-look-into-the-taxonomy-parts>source</a>).</p><table><thead><tr><th>DisplayName</th><th>InternalName</th><th>Data Type</th><th>Visible</th><th>Value</th><th>Data Format</th><th>Created By</th></tr></thead><tbody><tr><td>[YourColumnName]</td><td>[YourColumnName]</td><td>TaxonomyFieldType[Mult]</td><td>Yes</td><td>2;#Chennai</td><td>WSS Id; Name of Team</td><td>User</td></tr><tr><td>[YourColumnName]_0</td><td>[YourColumnName]TaxHTField0</td><td>Note</td><td>No</td><td>Chennai</td><td>c61d9028-824f-446e-9389-eb9515813a42</td><td>Name of Term</td></tr><tr><td>Taxonomy Catch All Column</td><td>TaxCatchAll</td><td>Lookup</td><td>No</td><td></td><td></td><td>SharePoint</td></tr></tbody></table><p>We see here basically, there is one column <em>[YourColumnName]</em> for your term display value and another column <em>[YourColumnName]TaxHTField0</em> for the term ID. But this is the internal structure, most time you handle with taxonomy fields by using the API, here everything internal is handled, and you don&rsquo;t have to worry about the internal field.
+<strong>Sample for REST taxonomy structure</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
+  <span style=color:#ff79c6>&#34;MetaSingleField&#34;</span>:{
+    <span style=color:#ff79c6>&#34;__metadata&#34;</span>:{
+      <span style=color:#ff79c6>&#34;type&#34;</span>:<span style=color:#f1fa8c>&#34;SP.Taxonomy.TaxonomyFieldValue&#34;</span>
+    },
+    <span style=color:#ff79c6>&#34;Label&#34;</span>:<span style=color:#f1fa8c>&#34;1289&#34;</span>,
+    <span style=color:#ff79c6>&#34;TermGuid&#34;</span>:<span style=color:#f1fa8c>&#34;0b032022-d156-49eb-9a48-904df5411349&#34;</span>,
+    <span style=color:#ff79c6>&#34;WssId&#34;</span>:<span style=color:#bd93f9>1289</span>
+  },
+  <span style=color:#ff79c6>&#34;MetaMultiField&#34;</span>:{
+    <span style=color:#ff79c6>&#34;__metadata&#34;</span>:{
+      <span style=color:#ff79c6>&#34;type&#34;</span>:<span style=color:#f1fa8c>&#34;Collection(SP.Taxonomy.TaxonomyFieldValue)&#34;</span>
+    },
+    <span style=color:#ff79c6>&#34;results&#34;</span>:[
+      {
+        <span style=color:#ff79c6>&#34;Label&#34;</span>:<span style=color:#f1fa8c>&#34; Label ABC&#34;</span>,
+        <span style=color:#ff79c6>&#34;TermGuid&#34;</span>:<span style=color:#f1fa8c>&#34;158a84f4-e5ff-440b-b55f-d30b0f77c402&#34;</span>,
+        <span style=color:#ff79c6>&#34;WssId&#34;</span>:<span style=color:#bd93f9>1291</span>
+      },
+      {
+        <span style=color:#ff79c6>&#34;Label&#34;</span>:<span style=color:#f1fa8c>&#34; Label DEF&#34;</span>,
+        <span style=color:#ff79c6>&#34;TermGuid&#34;</span>:<span style=color:#f1fa8c>&#34;03d2d388-a863-4f5d-818d-d71d948f763d&#34;</span>,
+        <span style=color:#ff79c6>&#34;WssId&#34;</span>:<span style=color:#bd93f9>1290</span>
+      }
+    ]
+  },
+  <span style=color:#ff79c6>&#34;TaxCatchAll&#34;</span>:{
+    <span style=color:#ff79c6>&#34;results&#34;</span>:[
+      {
+        <span style=color:#ff79c6>&#34;__metadata&#34;</span>:{
+          <span style=color:#ff79c6>&#34;id&#34;</span>:<span style=color:#f1fa8c>&#34;158a84f4-e5ff-440b-b55f-d30b0f77c402&#34;</span>,
+          <span style=color:#ff79c6>&#34;type&#34;</span>:<span style=color:#f1fa8c>&#34;SP.Data.TaxonomyHiddenListListItem&#34;</span>
+        },
+        <span style=color:#ff79c6>&#34;ID&#34;</span>:<span style=color:#bd93f9>1291</span>,
+        <span style=color:#ff79c6>&#34;Term&#34;</span>:<span style=color:#f1fa8c>&#34;Label ABC&#34;</span>
+      },
+      {
+        <span style=color:#ff79c6>&#34;__metadata&#34;</span>:{
+          <span style=color:#ff79c6>&#34;id&#34;</span>:<span style=color:#f1fa8c>&#34;03d2d388-a863-4f5d-818d-d71d948f763d&#34;</span>,
+          <span style=color:#ff79c6>&#34;type&#34;</span>:<span style=color:#f1fa8c>&#34;SP.Data.TaxonomyHiddenListListItem&#34;</span>
+        },
+        <span style=color:#ff79c6>&#34;ID&#34;</span>:<span style=color:#bd93f9>1290</span>,
+        <span style=color:#ff79c6>&#34;Term&#34;</span>:<span style=color:#f1fa8c>&#34;Label DEF&#34;</span>
+      },
+      {
+        <span style=color:#ff79c6>&#34;__metadata&#34;</span>:{
+          <span style=color:#ff79c6>&#34;id&#34;</span>:<span style=color:#f1fa8c>&#34;0b032022-d156-49eb-9a48-904df5411349&#34;</span>,
+          <span style=color:#ff79c6>&#34;type&#34;</span>:<span style=color:#f1fa8c>&#34;SP.Data.TaxonomyHiddenListListItem&#34;</span>
+        },
+        <span style=color:#ff79c6>&#34;ID&#34;</span>:<span style=color:#bd93f9>1289</span>,
+        <span style=color:#ff79c6>&#34;Term&#34;</span>:<span style=color:#f1fa8c>&#34;Label XYZ&#34;</span>
+      }
+    ]
+  }
+}
+</code></pre></div><h2 id=why-there-is-a-hidden-list>Why there is a hidden list?</h2><p>On the look of the field structure you also see a reference for WSS or TaxonomyHiddenList. The answer is, that is a caching system to allow get the taxonomy data faster from list only be a simple lookup to this hidden list. The good about this is, you d&rsquo;ont have to really care about that fact. If you change taxonomy field values, SharePoint internal has Event Receivers to handle an update to this hidden list. If you are change the taxonomy value inside the term store, there is also an hourly update timer job, it makes an update to the hidden list information. So the result the quick conclusion from migration perspective is for that:</p><ul><li><input checked disabled type=checkbox> <strong>D&rsquo;ont care about hidden list on migration!</strong></li></ul><h2 id=but-there-is-a-site-collection-and-a-global-term-store>But there is a site collection and a global term store?</h2><p>Yes, the only real difference is the availability. So global term sets are visible on every site collection. Local term sets are only visible to a single site collection.</p><ul><li><input checked disabled type=checkbox> <strong>Both sorts of terms are store on Managed Metadatabase</strong></li></ul><h2 id=how-are-managed-metadata-fields-and-term-store-connected>How are managed metadata fields and term store connected?</h2><p>A really important fact is, how the term store and fields are connected. We see more details by looking on the field structure.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=color:#ff79c6>&lt;Field</span> 
+    <span style=color:#50fa7b>Type=</span><span style=color:#f1fa8c>&#34;TaxonomyFieldType&#34;</span> 
+    <span style=color:#50fa7b>DisplayName=</span><span style=color:#f1fa8c>&#34;Custom (web)&#34;</span> 
+    <span style=color:#50fa7b>List=</span><span style=color:#f1fa8c>&#34;Lists/TaxonomyHiddenList&#34;</span> 
+    <span style=color:#50fa7b>WebId=</span><span style=color:#f1fa8c>&#34;~sitecollection&#34;</span> 
+    <span style=color:#50fa7b>ShowField=</span><span style=color:#f1fa8c>&#34;Term1033&#34;</span> 
+    <span style=color:#50fa7b>Required=</span><span style=color:#f1fa8c>&#34;FALSE&#34;</span> 
+    <span style=color:#50fa7b>EnforceUniqueValues=</span><span style=color:#f1fa8c>&#34;FALSE&#34;</span> 
+    <span style=color:#50fa7b>Group=</span><span style=color:#f1fa8c>&#34;_Custom&#34;</span> 
+    <span style=color:#50fa7b>ID=</span><span style=color:#f1fa8c>&#34;{fce6a8e2-23e8-49c2-9bad-a534555296bb}&#34;</span> 
+    <span style=color:#50fa7b>SourceID=</span><span style=color:#f1fa8c>&#34;{5e68c9eb-5efe-4bcc-b8db-93d38d797fbe}&#34;</span> 
+    <span style=color:#50fa7b>StaticName=</span><span style=color:#f1fa8c>&#34;__Custom&#34;</span> 
+    <span style=color:#50fa7b>Name=</span><span style=color:#f1fa8c>&#34;__Custom&#34;</span> 
+    <span style=color:#50fa7b>Overwrite=</span><span style=color:#f1fa8c>&#34;TRUE&#34;</span><span style=color:#ff79c6>&gt;</span>
+    Default /&gt;
+    <span style=color:#ff79c6>&lt;Customization&gt;</span>
+        <span style=color:#ff79c6>&lt;ArrayOfProperty&gt;</span>
+            <span style=color:#ff79c6>&lt;Property&gt;</span>
+                <span style=color:#ff79c6>&lt;Name&gt;</span>SspId<span style=color:#ff79c6>&lt;/Name&gt;</span>
+                <span style=color:#ff79c6>&lt;Value</span> 
+                    <span style=color:#50fa7b>xmlns:q1=</span><span style=color:#f1fa8c>&#34;http://www.w3.org/2001/XMLSchema&#34;</span> 
+                    <span style=color:#50fa7b>p4:type=</span><span style=color:#f1fa8c>&#34;q1:string&#34;</span> 
+                    <span style=color:#50fa7b>xmlns:p4=</span><span style=color:#f1fa8c>&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span><span style=color:#ff79c6>&gt;</span>b98dd270-8577-4db8-99e1-b9e894624fdb
+                <span style=color:#ff79c6>&lt;/Value&gt;</span>
+            <span style=color:#ff79c6>&lt;/Property&gt;</span>
+            <span style=color:#ff79c6>&lt;Property&gt;</span>
+                <span style=color:#ff79c6>&lt;Name&gt;</span>GroupId<span style=color:#ff79c6>&lt;/Name&gt;</span>
+            <span style=color:#ff79c6>&lt;/Property&gt;</span>
+            <span style=color:#ff79c6>&lt;Property&gt;</span>
+                <span style=color:#ff79c6>&lt;Name&gt;</span>TermSetId<span style=color:#ff79c6>&lt;/Name&gt;</span>
+                <span style=color:#ff79c6>&lt;Value</span> 
+                    <span style=color:#50fa7b>xmlns:q2=</span><span style=color:#f1fa8c>&#34;http://www.w3.org/2001/XMLSchema&#34;</span> 
+                    <span style=color:#50fa7b>p4:type=</span><span style=color:#f1fa8c>&#34;q2:string&#34;</span> 
+                    <span style=color:#50fa7b>xmlns:p4=</span><span style=color:#f1fa8c>&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span><span style=color:#ff79c6>&gt;</span>b7ae10cd-6c7c-4386-a1f2-7abec8e759e1
+                <span style=color:#ff79c6>&lt;/Value&gt;</span>
+            <span style=color:#ff79c6>&lt;/Property&gt;</span>
+            <span style=color:#ff79c6>&lt;Property&gt;</span>
+                <span style=color:#ff79c6>&lt;Name&gt;</span>AnchorId<span style=color:#ff79c6>&lt;/Name&gt;</span>
+                <span style=color:#ff79c6>&lt;Value</span> 
+                    <span style=color:#50fa7b>xmlns:q3=</span><span style=color:#f1fa8c>&#34;http://www.w3.org/2001/XMLSchema&#34;</span> 
+                    <span style=color:#50fa7b>p4:type=</span><span style=color:#f1fa8c>&#34;q3:string&#34;</span> 
+                    <span style=color:#50fa7b>xmlns:p4=</span><span style=color:#f1fa8c>&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span><span style=color:#ff79c6>&gt;</span>00000000-0000-0000-0000-000000000000
+                <span style=color:#ff79c6>&lt;/Value&gt;</span>
+            <span style=color:#ff79c6>&lt;/Property&gt;</span>
+            ...
+        <span style=color:#ff79c6>&lt;/ArrayOfProperty&gt;</span>
+    <span style=color:#ff79c6>&lt;/Customization&gt;</span>
+<span style=color:#ff79c6>&lt;/Field&gt;</span>
+</code></pre></div><p>We find two important values:</p><ol><li><em>SspId</em>: This is the ID of your managed metadata service application</li><li><em>TermSetId</em>: This is the ID of your termset</li></ol><p>The consequence of these two information on migration perspective is.</p><ul><li><input checked disabled type=checkbox> <strong>You need your Managed Metadata SQL Database and a related service
+application to keep your term store ID (SspID)</strong></li><li><input checked disabled type=checkbox> <strong>You need always correct termset and term IDs for migration</strong></li></ul><h2 id=can-i-import-or-export-my-termsets>Can I import or export my termsets?</h2><p>There are several import and export mechanisms here some details about:</p><ul><li>Taxonomy Import (<a href="https://support.microsoft.com/en-us/office/import-term-sets-168fbc86-7fce-4288-9a1f-b83fc3921c18#:~:text=Import%20a%20term%20set,-You%20must%20be&text=Select%20the%20heading%20of%20the,want%20to%20save%20the%20file.">details</a>): It allows only to import simple csv based termsets without IDs, not for migration</li><li>Export-SPMetadataWebServicePartitionData (<a href=https://urisharora.com/2020/08/migrating-managed-metadata-between-farms-in-sharepoint/>details</a>): It&rsquo;s only for server to server migration from the same version</li><li>Powershell Skripts (<a href=https://www.codeproject.com/Articles/1099878/Migrate-SharePoint-Taxonomy-Term-Stores-from-Share>sample</a>): You will keep your term set IDs, it can work for simple migrations only for term sets. If you have related data on your site collections, your term store ID could not match. Possible is first a database migration and afterwards a delta migration</li><li>Migration tools: Mostly are relative close to Powershell Scripts</li><li>PNP Powershell: Same like Powershell Scripts</li></ul><p>In general, you have to think on these scenarios on a little more details:</p><ul><li>Handle users are not more available on target system</li><li>Handle orphaned terms</li><li>Handle term reuse</li><li>Handle navigation term sets</li></ul><h2 id=how-looks-a-database-migration>How looks a database migration?</h2><p>To move the managed metadata database, take a copy only backup of it from your SQL server and then restore from files in your new SQL server. I took this short sample from <a href=https://anothersharepointblog.com/migrating-a-managed-metadata-database>here</a>.</p><p>At this point, you already have a managed metadata service application in your target farm and you need to get it’s globally unique identifier (GUID). Run the following:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ps1 data-lang=ps1><span style=color:#8be9fd;font-style:italic>Get-SPServiceApplication</span>  |  ?{<span style=color:#8be9fd;font-style:italic>$_</span>.name  <span style=color:#ff79c6>-like</span>  <span style=color:#f1fa8c>&#34;*meta*&#34;</span>}  |  <span style=color:#8be9fd;font-style:italic>ft </span>id
+</code></pre></div><p>You could put that ID in a variable, or you could type it into your next set of commands that attach the new db to the Managed Metadata service application</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ps1 data-lang=ps1><span style=color:#8be9fd;font-style:italic>$ServiceID</span>  =  <span style=color:#8be9fd;font-style:italic>Get-SPServiceApplication</span>  |  ?{<span style=color:#8be9fd;font-style:italic>$_</span>.name  <span style=color:#ff79c6>-like</span>  <span style=color:#f1fa8c>&#34;*meta*&#34;</span>}  |  <span style=color:#8be9fd;font-style:italic>ft </span>id
+
+<span style=color:#8be9fd;font-style:italic>$mms</span>  =  <span style=color:#8be9fd;font-style:italic>Get-SPServiceApplication</span>  -Identity  <span style=color:#8be9fd;font-style:italic>$ServiceID</span>
+
+<span style=color:#8be9fd;font-style:italic>Set-SPMetadataerviceApplication</span>  -Identity  <span style=color:#8be9fd;font-style:italic>$mms</span>  -DatabaseName  <span style=color:#f1fa8c>&#34;MetaData&#34;</span>
+</code></pre></div><p>The key to this working is that the correct DatabaseName is used. So if your new db is named MetaDataDB, then the above script would need to be modified a little for the -DatabsaseName parameter.</p><p>The managed metadata navigation should now be working. If it’s not, just go to manage service applications, change the managed metadata database to a database that does not exist, click OK, then change it back. This process causes SharePoint to execute a timer job that syncs the service application up to the database.</p><hr><ul class=pager></ul><div id=disqus-comment></div></div><div class="col-lg-4
+col-md-4
+sidebar-container"><h5>TOC</h5><nav id=TableOfContents><ul><li><a href=#managed-metadata-migration>Managed Metadata Migration</a><ul><li><a href=#where-are-my-data-stored>Where are my data stored?</a></li><li><a href=#how-the-fields-are-structured>How the fields are structured?</a></li><li><a href=#why-there-is-a-hidden-list>Why there is a hidden list?</a></li><li><a href=#but-there-is-a-site-collection-and-a-global-term-store>But there is a site collection and a global term store?</a></li><li><a href=#how-are-managed-metadata-fields-and-term-store-connected>How are managed metadata fields and term store connected?</a></li><li><a href=#can-i-import-or-export-my-termsets>Can I import or export my termsets?</a></li><li><a href=#how-looks-a-database-migration>How looks a database migration?</a></li></ul></li></ul></nav><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>FEATURED TAGS</a></h5><div class=tags></div></section><section class="visible-md visible-lg"><hr><h5><a href=/top/about>ABOUT ME</a></h5><div class=short-about><a href=/top/about><img src=/img/mathiasosterkamp_half.png alt=avatar style=cursor:pointer></a><p>I've been working for about 10 years with a thematic focus on 'Collaboration' and 'Digital Transformation' especially in the product environment Microsoft on the topics Office 365, SharePoint, Azure and general web development.</p></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href rel=alternate type=application/rss+xml title="Mathias Osterkamp"><span class=fa-stack><i class="fas fa-rss"></i></span>RSS</a></li><li><a href=mailto:mathias.osterkamp@conception365.com><span class=fa-stack><i class="fas fa-envelope"></i></span>Email</a></li></ul><p class="copyright text-muted">Copyright &copy; Mathias Osterkamp 2021</p></div></div></div></footer><script>function async(u,c){var d=document,t='script',o=d.createElement(t),s=d.getElementsByTagName(t)[0];o.src=u;if(c){o.addEventListener('load',function(e){c(null,e);},false);}
+s.parentNode.insertBefore(o,s);}</script><script>if($('#tag_cloud').length!==0){async("/js/jquery.tagcloud.js",function(){$.fn.tagcloud.defaults={color:{start:'#bbbbee',end:'#0085a1'},};$('#tag_cloud a').tagcloud();})}</script><script>async("/js/fastclick.min.js",function(){var $nav=document.querySelector("nav");if($nav)FastClick.attach($nav);})</script></body></html>
