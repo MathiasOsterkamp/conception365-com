@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
@@ -45,3 +46,6 @@
     
   </channel>
 </rss>
+=======
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tags on Mathias Osterkamp</title><link>https://conception365.com/tags/</link><description>Recent content in Tags on Mathias Osterkamp</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 12 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://conception365.com/tags/index.xml" rel="self" type="application/rss+xml"/><item><title>Managed Metadata</title><link>https://conception365.com/tags/managed-metadata/</link><pubDate>Sat, 12 Dec 2020 00:00:00 +0000</pubDate><guid>https://conception365.com/tags/managed-metadata/</guid><description/></item><item><title>Migration</title><link>https://conception365.com/tags/migration/</link><pubDate>Sat, 12 Dec 2020 00:00:00 +0000</pubDate><guid>https://conception365.com/tags/migration/</guid><description/></item><item><title>SP2013</title><link>https://conception365.com/tags/sp2013/</link><pubDate>Sat, 12 Dec 2020 00:00:00 +0000</pubDate><guid>https://conception365.com/tags/sp2013/</guid><description/></item><item><title>SP2019</title><link>https://conception365.com/tags/sp2019/</link><pubDate>Sat, 12 Dec 2020 00:00:00 +0000</pubDate><guid>https://conception365.com/tags/sp2019/</guid><description/></item></channel></rss>
+>>>>>>> 463cef043d36a0db0122147f0d4fa064bd29ca0b

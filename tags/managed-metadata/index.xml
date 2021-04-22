@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
@@ -19,3 +20,7 @@ Where are my data stored? The first common question for migration is, where actu
     
   </channel>
 </rss>
+=======
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Managed Metadata on Mathias Osterkamp</title><link>https://conception365.com/tags/managed-metadata/</link><description>Recent content in Managed Metadata on Mathias Osterkamp</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 12 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://conception365.com/tags/managed-metadata/index.xml" rel="self" type="application/rss+xml"/><item><title>Managed Metadata Migration</title><link>https://conception365.com/post/2020-12-12-managed-metadata-migration/</link><pubDate>Sat, 12 Dec 2020 00:00:00 +0000</pubDate><guid>https://conception365.com/post/2020-12-12-managed-metadata-migration/</guid><description>Managed Metadata Migration Managed metadata is a formal taxonomy classification system. A taxonomy groups the words, labels, and terms that describe something, and then arranges the groups into a hierarchy. You can learn more basics and wordings on microsoft docs. Mostly it is simple called term store.
+Where are my data stored? The first common question for migration is, where actual the term store data are stored. The short answer is, everything important is stored in Managed Metadata SQL Database of the service application.</description></item></channel></rss>
+>>>>>>> 463cef043d36a0db0122147f0d4fa064bd29ca0b
