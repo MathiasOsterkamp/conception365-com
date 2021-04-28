@@ -36,23 +36,25 @@ is all I can say for the time being. If you really need to remove
 these orphans, an idea I had a the time was to create a duplicate of
 that orphan through code, then remove manually though the interface
 and see if that causes some sort of event receiver to run through and
-clear the source term (orphan).</p></blockquote><p>You can also find some more details about general deleting of terms <a href=https://sharepointmaven.com/how-to-properly-delete-and-hide-managed-metadata-terms-in-the-term-store/>source</a>.</p><h2 id=solution>Solution</h2><p>There is a easy solution by deleting the terms with <a href="https://docs.microsoft.com/de-de/powershell/sharepoint/sharepoint-pnp/sharepoint-pnp-cmdlets?view=sharepoint-ps">PNP Powershell</a>. Prepare your environment:</p><h2 id=install-module--name-pnppowershell>&mdash;ps1
-Install-Module -Name PnP.PowerShell</h2><p>Delete your terms:</p><p>&mdash;ps1</p><p>$session = Get-PnPTaxonomySession
-$termStore = $session.TermStores[0]
-$termSet = Get-PnPTermSet -Identity &ldquo;Orphaned Terms&rdquo; -TermGroup &ldquo;System&rdquo; -Includes &ldquo;Terms&rdquo;
-if ($termSet) {
-$terms = $termSet.Terms
-$terms | ForEach-Object {
-$_.DeleteObject()
+clear the source term (orphan).</p></blockquote><p>You can also find some more details about general deleting of terms <a href=https://sharepointmaven.com/how-to-properly-delete-and-hide-managed-metadata-terms-in-the-term-store/>source</a>.</p><h2 id=solution>Solution</h2><p>There is a easy solution by deleting the terms with <a href="https://docs.microsoft.com/de-de/powershell/sharepoint/sharepoint-pnp/sharepoint-pnp-cmdlets?view=sharepoint-ps">PNP Powershell</a>. Prepare your environment:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ps1 data-lang=ps1><span style=color:#8be9fd;font-style:italic>Install-Module</span> -Name PnP.PowerShell
+</code></pre></div><p>Delete your terms:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ps1 data-lang=ps1>
+<span style=color:#8be9fd;font-style:italic>$session</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPTaxonomySession</span>
+<span style=color:#8be9fd;font-style:italic>$termStore</span> = <span style=color:#8be9fd;font-style:italic>$session</span>.TermStores[0]
+<span style=color:#8be9fd;font-style:italic>$termSet</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPTermSet</span> -Identity <span style=color:#f1fa8c>&#34;Orphaned Terms&#34;</span> -TermGroup <span style=color:#f1fa8c>&#34;System&#34;</span> -Includes <span style=color:#f1fa8c>&#34;Terms&#34;</span>
+<span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>$termSet</span>) {
+  <span style=color:#8be9fd;font-style:italic>$terms</span> = <span style=color:#8be9fd;font-style:italic>$termSet</span>.Terms
+  <span style=color:#8be9fd;font-style:italic>$terms</span> | <span style=color:#ff79c6>ForEach</span>-Object { 
+    <span style=color:#8be9fd;font-style:italic>$_</span>.DeleteObject() 
+  }
+  <span style=color:#8be9fd;font-style:italic>$termStore</span>.CommitAll();
+  <span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
 }
-$termStore.CommitAll();
-Invoke-PnPQuery
-}</p><hr><p>Thats everything!</p><hr><ul class=pager><li class=previous><a href=https://conception365.com/post/2020-12-12-managed-metadata-migration/ data-toggle=tooltip data-placement=top title="Managed Metadata Migration">&larr;
+
+</code></pre></div><p>Thats everything!</p><hr><ul class=pager><li class=previous><a href=https://conception365.com/post/2020-12-12-managed-metadata-migration/ data-toggle=tooltip data-placement=top title="Managed Metadata Migration">&larr;
 Previous Post</a></li><li class=next><a href=https://conception365.com/post/2021-04-22-spfx-2019-prettier-eslint/ data-toggle=tooltip data-placement=top title="SPFX 2019 eslint and prettier">Next
 Post &rarr;</a></li></ul><div id=disqus-comment></div></div><div class="col-lg-4
 col-md-4
-sidebar-container"><h5>TOC</h5><nav id=TableOfContents><ul><li><a href=#remove-managed-metadata-orphaned-terms>Remove Managed Metadata Orphaned Terms</a><ul><li><a href=#problem>Problem</a></li><li><a href=#solution>Solution</a></li><li><a href=#install-module--name-pnppowershell>&mdash;ps1
-Install-Module -Name PnP.PowerShell</a></li></ul></li></ul></nav><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>FEATURED TAGS</a></h5><div class=tags><a href=/tags/managed-metadata title=managed-metadata>managed-metadata</a>
+sidebar-container"><h5>TOC</h5><nav id=TableOfContents><ul><li><a href=#remove-managed-metadata-orphaned-terms>Remove Managed Metadata Orphaned Terms</a><ul><li><a href=#problem>Problem</a></li><li><a href=#solution>Solution</a></li></ul></li></ul></nav><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>FEATURED TAGS</a></h5><div class=tags><a href=/tags/managed-metadata title=managed-metadata>managed-metadata</a>
 <a href=/tags/sp2019 title=sp2019>sp2019</a></div></section><section class="visible-md visible-lg"><hr><h5><a href=/top/about>ABOUT ME</a></h5><div class=short-about><a href=/top/about><img src=/img/mathiasosterkamp_half.png alt=avatar style=cursor:pointer></a><p>I've been working for about 10 years with a thematic focus on 'Collaboration' and 'Digital Transformation' especially in the product environment Microsoft on the topics Office 365, SharePoint, Azure and general web development.</p></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href rel=alternate type=application/rss+xml title="Mathias Osterkamp"><span class=fa-stack><i class="fas fa-rss"></i></span>
 RSS</a></li><li><a href=mailto:mathias.osterkamp@conception365.com><span class=fa-stack><i class="fas fa-envelope"></i></span>
 Email</a></li><li><a href=/top/impressum/><span>Impressum</span></a></li><li><a href=/top/privacy/><span>Privacy Policy</span></a></li></ul><p class="copyright text-muted">Copyright &copy; Mathias Osterkamp 2021</p></div></div></div></footer><script async src="https://www.googletagmanager.com/gtag/js?id=G-JG6K5XRGQL"></script><script>var dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-JG6K5XRGQL',{anonymize_ip:!0})}</script></body></html>
