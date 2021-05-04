@@ -1,0 +1,367 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Time Tracking",
+    "description": "Requests in regards to the time tracking functionality in sevDesk.",
+    "contact": {}
+  },
+  "host": "my.sevdesk.de",
+  "basePath": "/api/v1",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/ContactTimeTracking": {
+      "get": {
+        "description": "This request retrieves all time tracking objects which are in relation to contacts in sevDesk.\nOne object in the response will include:\n\n1. The contact for which the time was tracked\n2. The part (service) which was provided in this time\n3. The employee who tracked his time\n4. The project for which the time was tracked\n5. Optional invoice positions in which this tracking was billed\n6. The date of the tracking\n7. The amount of time tracked\n\nand a lot more...",
+        "summary": "Get Time Trackings related to contacts",
+        "operationId": "GetTimeTrackingsrelatedtocontacts",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/Tracking": {
+      "get": {
+        "description": "This request will retrieve all time trackings created by users.\nPlease note, this will NOT include any detailed information like start date and end date.\nIt only shows the different time ranges that have been tracked.",
+        "summary": "Get Trackings",
+        "operationId": "GetTrackings",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/TrackingPosition": {
+      "get": {
+        "description": "This request retrieves the detailed information about all trackings.\nThis will include:\n\n1. The start date of the tracking\n2. The end date of the tracking",
+        "summary": "Get detailed information about a Tracking",
+        "operationId": "GetdetailedinformationaboutaTracking",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/ContactTimeTracking/Query/getAggregatedContactData": {
+      "get": {
+        "description": "This request will retrieve the time trackings and therefore the amount of time, which has yet not been billed, of all contacts which where used at least once in a time tracking.\n(Not billed meaning entries which have yet not been used in a invoice)",
+        "summary": "Get aggregated unbilled time tracking objects",
+        "operationId": "Getaggregatedunbilledtimetrackingobjects",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/ContactTimeTracking/Factory/saveTrackedEvents": {
+      "post": {
+        "description": "This request creates a time tracking object.\nIt is optionally possible to create a time tracking in relation to a project, including a service (part) which ís saved in your sevDesk account if you want.\nPlease have a look at the description of the parameters and if possible don't change the order in which \"trackings[x]\", duration, project and part.\nIt is also possible to update an existing time tracking.\nIn this case, have a look at the parameter \"trackings[0][id]\".",
+        "summary": "Create a time tracking",
+        "operationId": "Createatimetracking",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "trackings[0][contact][id]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the sevDesk contact for which time has been tracked"
+          },
+          {
+            "name": "trackings[0][contact][objectName]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Internal Object Name - Do not change!"
+          },
+          {
+            "name": "trackings[0][project][id]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the existing sevDesk project for which time has been tracked. If no project is connected to the time tracking, delete this parameter and the parameter underneath and create the parameter \"trackings[0][project]\" with the value \"null\"."
+          },
+          {
+            "name": "trackings[0][project][objectName]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Internal Object Name - Do not change! Rules defined above apply."
+          },
+          {
+            "name": "trackings[0][part][id]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the sevDesk part which represents the service that has been supplied during the time. The part MUST be of unity \"hour\" as it otherwise can't be used here. \n If no part is connected to the time tracking, delete this parameter and the parameter underneath and create the parameter \"trackings[0][part]\" with the value \"null\"."
+          },
+          {
+            "name": "trackings[0][part][objectName]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Internal Object Name - Do not change! Rules defined above apply."
+          },
+          {
+            "name": "trackings[0][employee][id]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "The ID of the sevDesk user who provided the service for which the time was tracked."
+          },
+          {
+            "name": "trackings[0][employee][objectName]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Internal Object Name - Do not change!"
+          },
+          {
+            "name": "trackings[0][date]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "The date on which time was tracked. Idealy a timestamp."
+          },
+          {
+            "name": "trackings[0][billable]",
+            "in": "formData",
+            "required": true,
+            "type": "boolean",
+            "description": "Define if the time tracking is billable (true) or not (false)"
+          },
+          {
+            "name": "trackings[0][precision]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "The precision with which time was tracked. Default here is 1 minute."
+          },
+          {
+            "name": "trackings[0][taxRate]",
+            "in": "formData",
+            "required": true,
+            "type": "integer",
+            "format": "int32",
+            "description": "The tax rate which is applied to the hourly cost of the service for which time was tracked."
+          },
+          {
+            "name": "trackings[0][hourlyGross]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "The hourly gross cost of the service for which time was tracked."
+          },
+          {
+            "name": "trackings[0][description]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "An optional description of the time tracking. Can contain anything worth mentioning."
+          },
+          {
+            "name": "trackings[0][objectName]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Internal Object Name - Do not change!"
+          },
+          {
+            "name": "trackings[0][id]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "If this is an update to an existing time tracking, for example if you are adding an additional hour to the same tracking, enter the ID of the existing tracking here, otherwise a new tracking will be created which is independent from the one you wanted to update. If this should be a new tracking, just leave this parameter at \"null\"."
+          },
+          {
+            "name": "trackings[0][mapAll]",
+            "in": "formData",
+            "required": true,
+            "type": "boolean",
+            "description": "Internal mapping parameter - leave at true!"
+          },
+          {
+            "name": "durations",
+            "in": "formData",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The duration of the time tracking. This states how much time was tracked. An example for a tracking is provided. If you are dealing with a time range, you can use the format provided.\nIf you are using just an amount of type hh:mm (hours:minutes) you can use this format:\n[{\"unit\":\"date_interval\",\"value\":\"01:00\"}]\nPlease regard the different unity \"date_interval\" instead of \"date\" and \"value\" instead of start and end date."
+          },
+          {
+            "name": "projects",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Keep at null and remove the last three parameters in this body if you dont want a new project."
+          },
+          {
+            "name": "parts[0][objectName]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Internal Object Name - Do not change!"
+          },
+          {
+            "name": "parts[0][mapAll]",
+            "in": "formData",
+            "required": true,
+            "type": "boolean",
+            "description": "Internal mapping parameter - leave at true!"
+          },
+          {
+            "name": "projects[0][name]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "If you defining a new project, use this parameter to provide a name for the project"
+          },
+          {
+            "name": "projects[0][objectName]",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Use if defining a new project. Internal Object Name - Do not change!"
+          },
+          {
+            "name": "projects[0][mapAll]",
+            "in": "formData",
+            "required": true,
+            "type": "boolean",
+            "description": "Use if defining a new project. Internal mapping parameter - leave at true!"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "definitions": {
+    "duration": {
+      "title": "duration",
+      "example": {
+        "unit": "date",
+        "startDate": "08:00",
+        "endDate": "12:00"
+      },
+      "type": "object",
+      "properties": {
+        "unit": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string"
+        },
+        "endDate": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit",
+        "startDate",
+        "endDate"
+      ]
+    }
+  },
+  "tags": []
+}

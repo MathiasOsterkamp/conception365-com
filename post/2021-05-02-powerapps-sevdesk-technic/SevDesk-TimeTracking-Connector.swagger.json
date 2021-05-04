@@ -1,0 +1,1765 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "SevDesk",
+    "description": "SevDesk TimeTracking",
+    "version": "1.0"
+  },
+  "host": "my.sevdesk.de",
+  "basePath": "/api/v1",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [],
+  "produces": [],
+  "paths": {
+    "/ContactTimeTracking": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "objects": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "id"
+                      },
+                      "objectName": {
+                        "type": "string",
+                        "description": "objectName"
+                      },
+                      "additionalInformation": {
+                        "type": "string",
+                        "description": "additionalInformation"
+                      },
+                      "create": {
+                        "type": "string",
+                        "description": "create"
+                      },
+                      "update": {
+                        "type": "string",
+                        "description": "update"
+                      },
+                      "sevClient": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "sevClient"
+                      },
+                      "contact": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          },
+                          "additionalInformation": {
+                            "type": "string",
+                            "description": "additionalInformation"
+                          },
+                          "create": {
+                            "type": "string",
+                            "description": "create"
+                          },
+                          "update": {
+                            "type": "string",
+                            "description": "update"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "name"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "status"
+                          },
+                          "customerNumber": {
+                            "type": "string",
+                            "description": "customerNumber"
+                          },
+                          "surename": {
+                            "type": "string",
+                            "description": "surename"
+                          },
+                          "familyname": {
+                            "type": "string",
+                            "description": "familyname"
+                          },
+                          "titel": {
+                            "type": "string",
+                            "description": "titel"
+                          },
+                          "category": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "category"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "description"
+                          },
+                          "academicTitle": {
+                            "type": "string",
+                            "description": "academicTitle"
+                          },
+                          "gender": {
+                            "type": "string",
+                            "description": "gender"
+                          },
+                          "sevClient": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "sevClient"
+                          },
+                          "name2": {
+                            "type": "string",
+                            "description": "name2"
+                          },
+                          "birthday": {
+                            "type": "string",
+                            "description": "birthday"
+                          },
+                          "vatNumber": {
+                            "type": "string",
+                            "description": "vatNumber"
+                          },
+                          "bankAccount": {
+                            "type": "string",
+                            "description": "bankAccount"
+                          },
+                          "bankNumber": {
+                            "type": "string",
+                            "description": "bankNumber"
+                          },
+                          "defaultCashbackTime": {
+                            "type": "string",
+                            "description": "defaultCashbackTime"
+                          },
+                          "defaultCashbackPercent": {
+                            "type": "string",
+                            "description": "defaultCashbackPercent"
+                          },
+                          "defaultTimeToPay": {
+                            "type": "string",
+                            "description": "defaultTimeToPay"
+                          },
+                          "taxNumber": {
+                            "type": "string",
+                            "description": "taxNumber"
+                          },
+                          "taxOffice": {
+                            "type": "string",
+                            "description": "taxOffice"
+                          },
+                          "exemptVat": {
+                            "type": "string",
+                            "description": "exemptVat"
+                          },
+                          "taxType": {
+                            "type": "string",
+                            "description": "taxType"
+                          },
+                          "defaultDiscountAmount": {
+                            "type": "string",
+                            "description": "defaultDiscountAmount"
+                          },
+                          "defaultDiscountPercentage": {
+                            "type": "string",
+                            "description": "defaultDiscountPercentage"
+                          },
+                          "buyerReference": {
+                            "type": "string",
+                            "description": "buyerReference"
+                          },
+                          "governmentAgency": {
+                            "type": "string",
+                            "description": "governmentAgency"
+                          }
+                        },
+                        "description": "contact"
+                      },
+                      "project": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          },
+                          "additionalInformation": {
+                            "type": "string",
+                            "description": "additionalInformation"
+                          },
+                          "create": {
+                            "type": "string",
+                            "description": "create"
+                          },
+                          "update": {
+                            "type": "string",
+                            "description": "update"
+                          },
+                          "sevClient": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "sevClient"
+                          },
+                          "contact": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "contact"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "name"
+                          }
+                        },
+                        "description": "project"
+                      },
+                      "part": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          },
+                          "additionalInformation": {
+                            "type": "string",
+                            "description": "additionalInformation"
+                          },
+                          "create": {
+                            "type": "string",
+                            "description": "create"
+                          },
+                          "update": {
+                            "type": "string",
+                            "description": "update"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "name"
+                          },
+                          "partNumber": {
+                            "type": "string",
+                            "description": "partNumber"
+                          },
+                          "text": {
+                            "type": "string",
+                            "description": "text"
+                          },
+                          "category": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "category"
+                          },
+                          "stock": {
+                            "type": "integer",
+                            "format": "int32",
+                            "description": "stock"
+                          },
+                          "stockEnabled": {
+                            "type": "string",
+                            "description": "stockEnabled"
+                          },
+                          "unity": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "unity"
+                          },
+                          "pricePartner": {
+                            "type": "string",
+                            "description": "pricePartner"
+                          },
+                          "priceCustomer": {
+                            "type": "string",
+                            "description": "priceCustomer"
+                          },
+                          "price": {
+                            "type": "string",
+                            "description": "price"
+                          },
+                          "secondUnityFactor": {
+                            "type": "string",
+                            "description": "secondUnityFactor"
+                          },
+                          "sevClient": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "sevClient"
+                          },
+                          "pricePurchase": {
+                            "type": "string",
+                            "description": "pricePurchase"
+                          },
+                          "taxRate": {
+                            "type": "string",
+                            "description": "taxRate"
+                          },
+                          "image": {
+                            "type": "string",
+                            "description": "image"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "status"
+                          },
+                          "internalComment": {
+                            "type": "string",
+                            "description": "internalComment"
+                          },
+                          "priceNet": {
+                            "type": "string",
+                            "description": "priceNet"
+                          },
+                          "priceGross": {
+                            "type": "string",
+                            "description": "priceGross"
+                          }
+                        },
+                        "description": "part"
+                      },
+                      "employee": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "employee"
+                      },
+                      "tracking": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "tracking"
+                      },
+                      "date": {
+                        "type": "string",
+                        "description": "date"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "status"
+                      },
+                      "billable": {
+                        "type": "string",
+                        "description": "billable"
+                      },
+                      "precision": {
+                        "type": "string",
+                        "description": "precision"
+                      },
+                      "quantity": {
+                        "type": "string",
+                        "description": "quantity"
+                      },
+                      "taxRate": {
+                        "type": "string",
+                        "description": "taxRate"
+                      },
+                      "hourlyGross": {
+                        "type": "string",
+                        "description": "hourlyGross"
+                      },
+                      "hourlyTax": {
+                        "type": "string",
+                        "description": "hourlyTax"
+                      },
+                      "hourlyNet": {
+                        "type": "string",
+                        "description": "hourlyNet"
+                      },
+                      "sumGross": {
+                        "type": "string",
+                        "description": "sumGross"
+                      },
+                      "sumTax": {
+                        "type": "string",
+                        "description": "sumTax"
+                      },
+                      "sumNet": {
+                        "type": "string",
+                        "description": "sumNet"
+                      },
+                      "usedAt": {
+                        "type": "string",
+                        "description": "usedAt"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "description"
+                      },
+                      "duration": {
+                        "type": "string",
+                        "description": "duration"
+                      },
+                      "startDate": {
+                        "type": "string",
+                        "description": "startDate"
+                      },
+                      "endDate": {
+                        "type": "string",
+                        "description": "endDate"
+                      }
+                    }
+                  },
+                  "description": "objects"
+                }
+              }
+            }
+          }
+        },
+        "summary": "TimeTrackingContact",
+        "operationId": "TimeTrackingContact",
+        "parameters": [
+          {
+            "name": "contact[id]",
+            "in": "query",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "contact[objectName]",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "used",
+            "in": "query",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "name": "embed",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "duration,startDate,endDate,contact,contact.parent,part,project,project.name"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 9999
+          },
+          {
+            "name": "orderBy[0][field]",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "date"
+          },
+          {
+            "name": "orderBy[0][arrangement]",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "desc"
+          }
+        ],
+        "description": "TimeTrackingContact",
+        "x-ms-visibility": "advanced"
+      }
+    },
+    "/ContactTimeTracking/Query/getAggregatedContactData": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromApiCache": {
+                  "type": "boolean",
+                  "description": "fromApiCache"
+                },
+                "objects": {
+                  "type": "object",
+                  "properties": {
+                    "objects": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "contact": {
+                            "type": "object",
+                            "properties": {
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              },
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "name"
+                              }
+                            },
+                            "description": "contact"
+                          },
+                          "date": {
+                            "type": "string",
+                            "description": "date"
+                          },
+                          "duration": {
+                            "type": "string",
+                            "description": "duration"
+                          },
+                          "quantity": {
+                            "type": "string",
+                            "description": "quantity"
+                          },
+                          "trackings": {
+                            "type": "integer",
+                            "format": "int32",
+                            "description": "trackings"
+                          },
+                          "used_trackings": {
+                            "type": "integer",
+                            "format": "int32",
+                            "description": "used_trackings"
+                          },
+                          "sumGross": {
+                            "type": "string",
+                            "description": "sumGross"
+                          },
+                          "sumTax": {
+                            "type": "string",
+                            "description": "sumTax"
+                          },
+                          "sumNet": {
+                            "type": "string",
+                            "description": "sumNet"
+                          }
+                        }
+                      },
+                      "description": "objects"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "format": "int32",
+                      "description": "total"
+                    },
+                    "emptyState": {
+                      "type": "boolean",
+                      "description": "emptyState"
+                    }
+                  },
+                  "description": "objects"
+                }
+              }
+            }
+          }
+        },
+        "summary": "TimeTrackingAggregatedContactData",
+        "parameters": [
+          {
+            "name": "embed",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "contact,contact.parent,part"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 50
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0
+          }
+        ],
+        "operationId": "TimeTrackingAggregatedContactData",
+        "description": "TimeTrackingAggregatedContactData"
+      }
+    },
+    "/Contact": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "objects": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "id"
+                      },
+                      "objectName": {
+                        "type": "string",
+                        "description": "objectName"
+                      },
+                      "additionalInformation": {
+                        "type": "string",
+                        "description": "additionalInformation"
+                      },
+                      "create": {
+                        "type": "string",
+                        "description": "create"
+                      },
+                      "update": {
+                        "type": "string",
+                        "description": "update"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "name"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "status"
+                      },
+                      "customerNumber": {
+                        "type": "string",
+                        "description": "customerNumber"
+                      },
+                      "surename": {
+                        "type": "string",
+                        "description": "surename"
+                      },
+                      "familyname": {
+                        "type": "string",
+                        "description": "familyname"
+                      },
+                      "titel": {
+                        "type": "string",
+                        "description": "titel"
+                      },
+                      "category": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "category"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "description"
+                      },
+                      "academicTitle": {
+                        "type": "string",
+                        "description": "academicTitle"
+                      },
+                      "gender": {
+                        "type": "string",
+                        "description": "gender"
+                      },
+                      "sevClient": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "sevClient"
+                      },
+                      "name2": {
+                        "type": "string",
+                        "description": "name2"
+                      },
+                      "birthday": {
+                        "type": "string",
+                        "description": "birthday"
+                      },
+                      "vatNumber": {
+                        "type": "string",
+                        "description": "vatNumber"
+                      },
+                      "bankAccount": {
+                        "type": "string",
+                        "description": "bankAccount"
+                      },
+                      "bankNumber": {
+                        "type": "string",
+                        "description": "bankNumber"
+                      },
+                      "defaultCashbackTime": {
+                        "type": "string",
+                        "description": "defaultCashbackTime"
+                      },
+                      "defaultCashbackPercent": {
+                        "type": "string",
+                        "description": "defaultCashbackPercent"
+                      },
+                      "defaultTimeToPay": {
+                        "type": "string",
+                        "description": "defaultTimeToPay"
+                      },
+                      "taxNumber": {
+                        "type": "string",
+                        "description": "taxNumber"
+                      },
+                      "taxOffice": {
+                        "type": "string",
+                        "description": "taxOffice"
+                      },
+                      "exemptVat": {
+                        "type": "string",
+                        "description": "exemptVat"
+                      },
+                      "taxType": {
+                        "type": "string",
+                        "description": "taxType"
+                      },
+                      "defaultDiscountAmount": {
+                        "type": "string",
+                        "description": "defaultDiscountAmount"
+                      },
+                      "defaultDiscountPercentage": {
+                        "type": "string",
+                        "description": "defaultDiscountPercentage"
+                      }
+                    }
+                  },
+                  "description": "objects"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Contacts",
+        "description": "Contacts",
+        "operationId": "Contacts",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "embed",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/SevUser": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "objects": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "id"
+                      },
+                      "objectName": {
+                        "type": "string",
+                        "description": "objectName"
+                      },
+                      "additionalInformation": {
+                        "type": "string",
+                        "description": "additionalInformation"
+                      },
+                      "create": {
+                        "type": "string",
+                        "description": "create"
+                      },
+                      "update": {
+                        "type": "string",
+                        "description": "update"
+                      },
+                      "fullname": {
+                        "type": "string",
+                        "description": "fullname"
+                      },
+                      "firstName": {
+                        "type": "string",
+                        "description": "firstName"
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "description": "lastName"
+                      },
+                      "username": {
+                        "type": "string",
+                        "description": "username"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "status"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "email"
+                      },
+                      "gender": {
+                        "type": "string",
+                        "description": "gender"
+                      },
+                      "role": {
+                        "type": "string",
+                        "description": "role"
+                      },
+                      "memberCode": {
+                        "type": "string",
+                        "description": "memberCode"
+                      },
+                      "sevClient": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "sevClient"
+                      },
+                      "lastLogin": {
+                        "type": "string",
+                        "description": "lastLogin"
+                      },
+                      "lastLoginIp": {
+                        "type": "string",
+                        "description": "lastLoginIp"
+                      },
+                      "welcomeScreenSeen": {
+                        "type": "string",
+                        "description": "welcomeScreenSeen"
+                      },
+                      "smtpName": {
+                        "type": "string",
+                        "description": "smtpName"
+                      },
+                      "smtpMail": {
+                        "type": "string",
+                        "description": "smtpMail"
+                      },
+                      "smtpUser": {
+                        "type": "string",
+                        "description": "smtpUser"
+                      },
+                      "smtpPort": {
+                        "type": "string",
+                        "description": "smtpPort"
+                      },
+                      "smtpSsl": {
+                        "type": "string",
+                        "description": "smtpSsl"
+                      },
+                      "smtpHost": {
+                        "type": "string",
+                        "description": "smtpHost"
+                      },
+                      "languageCode": {
+                        "type": "string",
+                        "description": "languageCode"
+                      },
+                      "twoFactorAuth": {
+                        "type": "string",
+                        "description": "twoFactorAuth"
+                      },
+                      "forcePasswordChange": {
+                        "type": "string",
+                        "description": "forcePasswordChange"
+                      },
+                      "clientOwner": {
+                        "type": "string",
+                        "description": "clientOwner"
+                      },
+                      "defaultReceiveMailCopy": {
+                        "type": "string",
+                        "description": "defaultReceiveMailCopy"
+                      },
+                      "hideMapsDirections": {
+                        "type": "string",
+                        "description": "hideMapsDirections"
+                      },
+                      "startDate": {
+                        "type": "string",
+                        "description": "startDate"
+                      },
+                      "endDate": {
+                        "type": "string",
+                        "description": "endDate"
+                      },
+                      "lastPasswordChange": {
+                        "type": "string",
+                        "description": "lastPasswordChange"
+                      }
+                    }
+                  },
+                  "description": "objects"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Users",
+        "description": "Users",
+        "operationId": "Users",
+        "parameters": []
+      }
+    },
+    "/Part": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromApiCache": {
+                  "type": "boolean",
+                  "description": "fromApiCache"
+                },
+                "objects": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "id"
+                      },
+                      "objectName": {
+                        "type": "string",
+                        "description": "objectName"
+                      },
+                      "additionalInformation": {
+                        "type": "string",
+                        "description": "additionalInformation"
+                      },
+                      "create": {
+                        "type": "string",
+                        "description": "create"
+                      },
+                      "update": {
+                        "type": "string",
+                        "description": "update"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "name"
+                      },
+                      "partNumber": {
+                        "type": "string",
+                        "description": "partNumber"
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "text"
+                      },
+                      "category": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "category"
+                      },
+                      "stock": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "stock"
+                      },
+                      "stockEnabled": {
+                        "type": "string",
+                        "description": "stockEnabled"
+                      },
+                      "unity": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          },
+                          "additionalInformation": {
+                            "type": "string",
+                            "description": "additionalInformation"
+                          },
+                          "create": {
+                            "type": "string",
+                            "description": "create"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "name"
+                          },
+                          "translationCode": {
+                            "type": "string",
+                            "description": "translationCode"
+                          },
+                          "unitySystem": {
+                            "type": "string",
+                            "description": "unitySystem"
+                          }
+                        },
+                        "description": "unity"
+                      },
+                      "pricePartner": {
+                        "type": "string",
+                        "description": "pricePartner"
+                      },
+                      "priceCustomer": {
+                        "type": "string",
+                        "description": "priceCustomer"
+                      },
+                      "price": {
+                        "type": "string",
+                        "description": "price"
+                      },
+                      "secondUnityFactor": {
+                        "type": "string",
+                        "description": "secondUnityFactor"
+                      },
+                      "sevClient": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "sevClient"
+                      },
+                      "pricePurchase": {
+                        "type": "string",
+                        "description": "pricePurchase"
+                      },
+                      "taxRate": {
+                        "type": "string",
+                        "description": "taxRate"
+                      },
+                      "image": {
+                        "type": "string",
+                        "description": "image"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "status"
+                      },
+                      "internalComment": {
+                        "type": "string",
+                        "description": "internalComment"
+                      },
+                      "priceNet": {
+                        "type": "string",
+                        "description": "priceNet"
+                      },
+                      "priceGross": {
+                        "type": "string",
+                        "description": "priceGross"
+                      }
+                    }
+                  },
+                  "description": "objects"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Parts",
+        "description": "Parts",
+        "operationId": "Parts",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 8
+          },
+          {
+            "name": "nameSearch",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "embed",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "unity"
+          },
+          {
+            "name": "unity[id]",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 9
+          },
+          {
+            "name": "unity[objectName]",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "Unity"
+          }
+        ]
+      }
+    },
+    "/Project": {
+      "get": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromApiCache": {
+                  "type": "boolean",
+                  "description": "fromApiCache"
+                },
+                "objects": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "id"
+                      },
+                      "objectName": {
+                        "type": "string",
+                        "description": "objectName"
+                      },
+                      "additionalInformation": {
+                        "type": "string",
+                        "description": "additionalInformation"
+                      },
+                      "create": {
+                        "type": "string",
+                        "description": "create"
+                      },
+                      "update": {
+                        "type": "string",
+                        "description": "update"
+                      },
+                      "sevClient": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "sevClient"
+                      },
+                      "contact": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "contact"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "name"
+                      }
+                    }
+                  },
+                  "description": "objects"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Projects",
+        "description": "Projects",
+        "operationId": "Projects",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 100
+          },
+          {
+            "name": "nameSearch",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "/ContactTimeTracking/{id}": {
+      "delete": {
+        "responses": {
+          "default": {
+            "description": "default",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "objects": {
+                  "type": "array",
+                  "items": {},
+                  "description": "objects"
+                }
+              }
+            }
+          }
+        },
+        "summary": "TimeTrackingDelete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "description": "TimeTrackingDelete",
+        "operationId": "TimeTrackingDelete"
+      }
+    },
+    "/ContactTimeTracking/Factory/saveTrackedEvents": {
+      "post": {
+        "summary": "Create a time tracking",
+        "description": "Create a time tracking",
+        "operationId": "CreateATimeTracking",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "bodycontent"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "objects": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "id"
+                      },
+                      "objectName": {
+                        "type": "string",
+                        "description": "objectName"
+                      },
+                      "additionalInformation": {
+                        "type": "string",
+                        "description": "additionalInformation"
+                      },
+                      "create": {
+                        "type": "string",
+                        "description": "create"
+                      },
+                      "update": {
+                        "type": "string",
+                        "description": "update"
+                      },
+                      "sevClient": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "sevClient"
+                      },
+                      "contact": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "contact"
+                      },
+                      "project": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          },
+                          "additionalInformation": {
+                            "type": "string",
+                            "description": "additionalInformation"
+                          },
+                          "create": {
+                            "type": "string",
+                            "description": "create"
+                          },
+                          "update": {
+                            "type": "string",
+                            "description": "update"
+                          },
+                          "sevClient": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "sevClient"
+                          },
+                          "contact": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "contact"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "name"
+                          }
+                        },
+                        "description": "project"
+                      },
+                      "part": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          },
+                          "additionalInformation": {
+                            "type": "string",
+                            "description": "additionalInformation"
+                          },
+                          "create": {
+                            "type": "string",
+                            "description": "create"
+                          },
+                          "update": {
+                            "type": "string",
+                            "description": "update"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "name"
+                          },
+                          "partNumber": {
+                            "type": "string",
+                            "description": "partNumber"
+                          },
+                          "text": {
+                            "type": "string",
+                            "description": "text"
+                          },
+                          "category": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "category"
+                          },
+                          "stock": {
+                            "type": "integer",
+                            "format": "int32",
+                            "description": "stock"
+                          },
+                          "stockEnabled": {
+                            "type": "string",
+                            "description": "stockEnabled"
+                          },
+                          "unity": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "unity"
+                          },
+                          "pricePartner": {
+                            "type": "string",
+                            "description": "pricePartner"
+                          },
+                          "priceCustomer": {
+                            "type": "string",
+                            "description": "priceCustomer"
+                          },
+                          "price": {
+                            "type": "string",
+                            "description": "price"
+                          },
+                          "secondUnityFactor": {
+                            "type": "string",
+                            "description": "secondUnityFactor"
+                          },
+                          "sevClient": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "description": "id"
+                              },
+                              "objectName": {
+                                "type": "string",
+                                "description": "objectName"
+                              }
+                            },
+                            "description": "sevClient"
+                          },
+                          "pricePurchase": {
+                            "type": "string",
+                            "description": "pricePurchase"
+                          },
+                          "taxRate": {
+                            "type": "string",
+                            "description": "taxRate"
+                          },
+                          "image": {
+                            "type": "string",
+                            "description": "image"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "status"
+                          },
+                          "internalComment": {
+                            "type": "string",
+                            "description": "internalComment"
+                          },
+                          "priceNet": {
+                            "type": "string",
+                            "description": "priceNet"
+                          },
+                          "priceGross": {
+                            "type": "string",
+                            "description": "priceGross"
+                          }
+                        },
+                        "description": "part"
+                      },
+                      "employee": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "employee"
+                      },
+                      "tracking": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "id"
+                          },
+                          "objectName": {
+                            "type": "string",
+                            "description": "objectName"
+                          }
+                        },
+                        "description": "tracking"
+                      },
+                      "date": {
+                        "type": "string",
+                        "description": "date"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "status"
+                      },
+                      "billable": {
+                        "type": "string",
+                        "description": "billable"
+                      },
+                      "precision": {
+                        "type": "string",
+                        "description": "precision"
+                      },
+                      "quantity": {
+                        "type": "string",
+                        "description": "quantity"
+                      },
+                      "taxRate": {
+                        "type": "string",
+                        "description": "taxRate"
+                      },
+                      "hourlyGross": {
+                        "type": "string",
+                        "description": "hourlyGross"
+                      },
+                      "hourlyTax": {
+                        "type": "string",
+                        "description": "hourlyTax"
+                      },
+                      "hourlyNet": {
+                        "type": "string",
+                        "description": "hourlyNet"
+                      },
+                      "sumGross": {
+                        "type": "string",
+                        "description": "sumGross"
+                      },
+                      "sumTax": {
+                        "type": "string",
+                        "description": "sumTax"
+                      },
+                      "sumNet": {
+                        "type": "string",
+                        "description": "sumNet"
+                      },
+                      "usedAt": {
+                        "type": "string",
+                        "description": "usedAt"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "description"
+                      }
+                    }
+                  },
+                  "description": "objects"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {},
+  "parameters": {},
+  "responses": {},
+  "securityDefinitions": {
+    "API-Schlüssel": {
+      "type": "apiKey",
+      "in": "query",
+      "name": "token"
+    }
+  },
+  "security": [
+    {
+      "API-Schlüssel": []
+    }
+  ],
+  "tags": []
+}
