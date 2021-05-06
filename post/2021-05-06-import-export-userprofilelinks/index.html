@@ -1,0 +1,159 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:site_name" content="Mathias Osterkamp"><meta property="og:type" content="article"><meta property="og:image" content="https://conception365.com/"><meta property="twitter:image" content="https://conception365.com/"><meta name=title content="Migrate User Profile My Links"><meta property="og:title" content="Migrate User Profile My Links"><meta property="twitter:title" content="Migrate User Profile My Links"><meta name=description content><meta property="og:description" content><meta property="twitter:description" content><meta property="twitter:card" content="summary"><meta name=keyword content="SharePoint, Microsoft, Office 365, Teams, Azure, Webdevelopment"><link rel="shortcut icon" href=/%20img/favicon.ico><title>Migrate User Profile My Links-Mathias Osterkamp</title><link rel=canonical href=/post/2021-05-06-import-export-userprofilelinks/><link rel=preload href=fonts/jost/files/jost-latin-200-normal.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=fonts/jost/files/jost-latin-400-normal.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=fonts/jost/files/jost-latin-500-normal.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=https://conception365.com/main.min.bda7b35113d37633cdc58d85977393417ff53fcf070379f7db04a5e0b679e639.css><script type=text/javascript src=/js/bundle.min.e459528320f58ffacd1d26c997631f04a7c3d2ff4f6408fe8e3bc5b970f96fae.js defer></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-JG6K5XRGQL"></script><script>var dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-JG6K5XRGQL',{anonymize_ip:!0})}</script></head><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=site-heading><a href=https://conception365.com><h1>Mathias Osterkamp</h1></a><span class=subheading>Specialist – focus development Microsoft technology stack</span></div></div></div></div></header><nav class="navbar navbar-default navbar-custom"><div class=container><div class="navbar-header page-scroll"><button type=button class=navbar-toggle>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav"><li><a href=/>Home</a></li><li><a href=/categories/administration>administration</a></li><li><a href=/categories/powerapps>powerapps</a></li><li><a href=/categories/spfx>spfx</a></li><li><a href=/top/about/>ABOUT ME</a></li></ul><ul class="nav navbar-nav navbar-right"><li><a href=/search>SEARCH <img src=/img/search.png height=15 style=cursor:pointer alt=Search></a></li></ul></div></div></div></nav><script>var $body=document.body,$toggle=document.querySelector('.navbar-toggle'),$navbar=document.querySelector('#huxblog_navbar'),$collapse=document.querySelector('.navbar-collapse');$toggle.addEventListener('click',handleMagic);function handleMagic(a){$navbar.className.indexOf('in')>0?($navbar.className=" ",setTimeout(function(){$navbar.className.indexOf('in')<0&&($collapse.style.height="0px")},400)):($collapse.style.height="auto",$navbar.className+=" in")}</script><article><div class=container><div class=row><div class="col-lg-8
+col-md-8
+post-container"><div class=post-preview><div class=penci-standard-cat><span class=cat><a class=penci-cat-name href=https://conception365.com/tags/migrate/ rel="category tag">Migrate</a>
+<a class=penci-cat-name href=https://conception365.com/tags/powershell/ rel="category tag">Powershell</a>
+<a class=penci-cat-name href=https://conception365.com/tags/sp2019/ rel="category tag">SP2019</a>
+<a class=penci-cat-name href=https://conception365.com/tags/onpremise/ rel="category tag">OnPremise</a></span></div><a href=https://conception365.com/post/2021-05-06-import-export-userprofilelinks/><h2 class=post-title>Migrate User Profile My Links</h2></a><h2 class=post-subtitle>I like to show how to export and import user profile quick links from one to another SharePoint OnPremise platform.</h2><span class=post-meta>Written by
+Mathias Osterkamp
+on
+Thursday, May 6, 2021</span></div><h1 id=problem>Problem</h1><p>SharePoint users can store favorite links directly inside the mysite. If you like to migrate to another SharePoint version or different server maybe you like to transfer these links without copy the database. In general these links are stored in the ProfileDB of your server. There is a smart article about this from Vinods <a href=https://vinodsharepoint.wordpress.com/2017/01/05/restoring-quick-links-in-users-mysite/>source</a>.</p><p>Here a small sample, where you can edit links:</p><p><img src=header.jpg alt="My Links" loading=lazy></p><p><a href=https://www.c-sharpcorner.com/blogs/sharepoint-my-site-my-links>source</a></p><h1 id=solution>Solution</h1><p>I wrote a improved script to import and export the data via xml. For export we use the profile manager to get the data and collect for every user all links.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ps1 data-lang=ps1><span style=color:#8be9fd;font-style:italic>$profileManager</span> = <span style=color:#8be9fd;font-style:italic>Get-UserProfileManager</span>
+<span style=color:#8be9fd;font-style:italic>$profiles</span> = <span style=color:#8be9fd;font-style:italic>$profileManager</span>.GetEnumerator() 
+<span style=color:#8be9fd;font-style:italic>$all</span> = <span style=color:#8be9fd;font-style:italic>$profileManager</span>.Count
+<span style=color:#8be9fd;font-style:italic>$collection</span> = @() 
+<span style=color:#8be9fd;font-style:italic>$num</span> = 0
+<span style=color:#ff79c6>foreach</span> (<span style=color:#8be9fd;font-style:italic>$profile</span> <span style=color:#ff79c6>in</span> <span style=color:#8be9fd;font-style:italic>$profiles</span>) { 
+    <span style=color:#8be9fd;font-style:italic>$userProfile</span> = <span style=color:#8be9fd;font-style:italic>$profileManager</span>.GetUserProfile(<span style=color:#8be9fd;font-style:italic>$profile</span>.AccountName);
+    <span style=color:#ff79c6>foreach</span> (<span style=color:#8be9fd;font-style:italic>$link</span> <span style=color:#ff79c6>in</span>   <span style=color:#8be9fd;font-style:italic>$userProfile</span>.QuickLinks.GetItems() ) {
+        <span style=color:#8be9fd;font-style:italic>$myLink</span> = [PSCustomObject]@{
+            AccountName  = <span style=color:#8be9fd;font-style:italic>$profile</span>.AccountName
+            Title        = <span style=color:#8be9fd;font-style:italic>$link</span>.Title
+            Url          = <span style=color:#8be9fd;font-style:italic>$link</span>.Url
+            <span style=color:#8be9fd;font-style:italic>Group </span>       = <span style=color:#8be9fd;font-style:italic>$link</span>.<span style=color:#8be9fd;font-style:italic>Group
+</span><span style=color:#8be9fd;font-style:italic></span>            PrivacyLevel = <span style=color:#8be9fd;font-style:italic>$link</span>.PrivacyLevel
+            ID           = <span style=color:#8be9fd;font-style:italic>$link</span>.ID
+        }
+        <span style=color:#8be9fd;font-style:italic>$collection</span> += <span style=color:#8be9fd;font-style:italic>$myLink</span> 
+    }
+    <span style=color:#8be9fd;font-style:italic>$num</span> ++
+    <span style=color:#ff79c6>if</span> (0 <span style=color:#ff79c6>-eq</span> (<span style=color:#8be9fd;font-style:italic>$num</span> % 1000)) {
+        <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;User profiles collected $num / $all&#34;</span> -ForegroundColor Gray
+    }
+}
+</code></pre></div><p>On the import site we need only recreate this link</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ps1 data-lang=ps1><span style=color:#8be9fd;font-style:italic>$profileManager</span> = <span style=color:#8be9fd;font-style:italic>Get-UserProfileManager</span>
+<span style=color:#8be9fd;font-style:italic>$userProfile</span> = <span style=color:#8be9fd;font-style:italic>$profileManager</span>.GetUserProfile(<span style=color:#8be9fd;font-style:italic>$link</span>.AccountName);
+<span style=color:#8be9fd;font-style:italic>$userProfile</span>.QuickLinks.Create(<span style=color:#8be9fd;font-style:italic>$link</span>.Title, <span style=color:#8be9fd;font-style:italic>$link</span>.Url, <span style=color:#f1fa8c>&#34;UserSpecified&#34;</span>, <span style=color:#8be9fd;font-style:italic>$link</span>.Group, <span style=color:#8be9fd;font-style:italic>$link</span>.PrivacyLevel) | <span style=color:#8be9fd;font-style:italic>Out-Null</span>
+</code></pre></div><p>Full script:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ps1 data-lang=ps1><span style=color:#8be9fd;font-style:italic>Add-PSSnapin</span> Microsoft.SharePoint.PowerShell -ErrorAction SilentlyContinue
+
+<span style=color:#ff79c6>Function</span> <span style=color:#8be9fd;font-style:italic>Export-UserProfileLinks</span>(<span style=color:#8be9fd;font-style:italic>$filePath</span>) {
+    <span style=color:#ff79c6>Try</span> {
+        <span style=color:#8be9fd;font-style:italic>Write-Host</span>  <span style=color:#f1fa8c>&#34;Enter Export-UserProfileLinks&#34;</span>  
+        <span style=color:#8be9fd;font-style:italic>$list</span> = <span style=color:#8be9fd;font-style:italic>Get-UserProfileLinks</span>
+        <span style=color:#6272a4>#convert to xml</span>
+        <span style=color:#8be9fd;font-style:italic>$xmlBackup</span> = <span style=color:#8be9fd;font-style:italic>$list</span> | <span style=color:#8be9fd;font-style:italic>ConvertTo-FullXML</span> -ObjectName <span style=color:#f1fa8c>&#34;Link&#34;</span> -RootNodeName <span style=color:#f1fa8c>&#34;Links&#34;</span>
+        <span style=color:#6272a4>#write file</span>
+        <span style=color:#8be9fd;font-style:italic>$xmlBackup</span> | <span style=color:#8be9fd;font-style:italic>Out-File</span> -FilePath <span style=color:#8be9fd;font-style:italic>$filePath</span>
+    }		
+    <span style=color:#ff79c6>Catch</span> {
+        <span style=color:#ff79c6>throw</span> <span style=color:#8be9fd;font-style:italic>$_</span>.Exception.Message
+    }
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span>  <span style=color:#f1fa8c>&#34;Leave Export-UserProfileLinks&#34;</span> 
+}
+<span style=color:#ff79c6>Function</span> <span style=color:#8be9fd;font-style:italic>Import-UserProfileLinks</span>(<span style=color:#8be9fd;font-style:italic>$configFilePath</span>) {   
+    <span style=color:#ff79c6>Try</span> {
+        <span style=color:#8be9fd;font-style:italic>Write-Host</span>  <span style=color:#f1fa8c>&#34;Enter Import-UserProfileLinks&#34;</span> 
+        [xml] <span style=color:#8be9fd;font-style:italic>$configXml</span> = <span style=color:#8be9fd;font-style:italic>Get-Content</span> <span style=color:#8be9fd;font-style:italic>$configFilePath</span> -Encoding UTF8
+        <span style=color:#ff79c6>foreach</span> (<span style=color:#8be9fd;font-style:italic>$link</span> <span style=color:#ff79c6>in</span> <span style=color:#8be9fd;font-style:italic>$configXml</span>.UserProfileLinks.UserProfileLink) {
+            <span style=color:#8be9fd;font-style:italic>Edit-UserProfileLink</span> <span style=color:#8be9fd;font-style:italic>$link</span> 
+        }
+    }		
+    <span style=color:#ff79c6>Catch</span> {
+        <span style=color:#ff79c6>throw</span> <span style=color:#8be9fd;font-style:italic>$_</span>.Exception.Message
+    }
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span>  <span style=color:#f1fa8c>&#34;Leave Import-UserProfileLinks&#34;</span>
+}
+<span style=color:#ff79c6>Function</span> <span style=color:#8be9fd;font-style:italic>Get-UserProfileLinks</span>() {
+    <span style=color:#8be9fd;font-style:italic>$profileManager</span> = <span style=color:#8be9fd;font-style:italic>Get-UserProfileManager</span>
+    <span style=color:#8be9fd;font-style:italic>$profiles</span> = <span style=color:#8be9fd;font-style:italic>$profileManager</span>.GetEnumerator() 
+    <span style=color:#8be9fd;font-style:italic>$all</span> = <span style=color:#8be9fd;font-style:italic>$profileManager</span>.Count
+    <span style=color:#8be9fd;font-style:italic>$collection</span> = @() 
+    <span style=color:#8be9fd;font-style:italic>$num</span> = 0
+    <span style=color:#ff79c6>foreach</span> (<span style=color:#8be9fd;font-style:italic>$profile</span> <span style=color:#ff79c6>in</span> <span style=color:#8be9fd;font-style:italic>$profiles</span>) { 
+        <span style=color:#8be9fd;font-style:italic>$userProfile</span> = <span style=color:#8be9fd;font-style:italic>$profileManager</span>.GetUserProfile(<span style=color:#8be9fd;font-style:italic>$profile</span>.AccountName);
+        <span style=color:#ff79c6>foreach</span> (<span style=color:#8be9fd;font-style:italic>$link</span> <span style=color:#ff79c6>in</span>   <span style=color:#8be9fd;font-style:italic>$userProfile</span>.QuickLinks.GetItems() ) {
+            <span style=color:#8be9fd;font-style:italic>$myLink</span> = [PSCustomObject]@{
+                AccountName  = <span style=color:#8be9fd;font-style:italic>$profile</span>.AccountName
+                Title        = <span style=color:#8be9fd;font-style:italic>$link</span>.Title
+                Url          = <span style=color:#8be9fd;font-style:italic>$link</span>.Url
+                <span style=color:#8be9fd;font-style:italic>Group </span>       = <span style=color:#8be9fd;font-style:italic>$link</span>.<span style=color:#8be9fd;font-style:italic>Group
+</span><span style=color:#8be9fd;font-style:italic></span>                PrivacyLevel = <span style=color:#8be9fd;font-style:italic>$link</span>.PrivacyLevel
+                ID           = <span style=color:#8be9fd;font-style:italic>$link</span>.ID
+            }
+            <span style=color:#8be9fd;font-style:italic>$collection</span> += <span style=color:#8be9fd;font-style:italic>$myLink</span> 
+        }
+        <span style=color:#8be9fd;font-style:italic>$num</span> ++
+        <span style=color:#ff79c6>if</span> (0 <span style=color:#ff79c6>-eq</span> (<span style=color:#8be9fd;font-style:italic>$num</span> % 1000)) {
+            <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;User profiles collected $num / $all&#34;</span> -ForegroundColor Gray
+        }
+    }
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;User profiles $num collected&#34;</span>
+    <span style=color:#ff79c6>return</span> <span style=color:#8be9fd;font-style:italic>$collection</span>
+}
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>Edit-UserProfileLink</span>(<span style=color:#8be9fd;font-style:italic>$link</span>) {
+    <span style=color:#ff79c6>Try</span> {
+        <span style=color:#8be9fd;font-style:italic>$profileManager</span> = <span style=color:#8be9fd;font-style:italic>Get-UserProfileManager</span>
+        <span style=color:#8be9fd;font-style:italic>$userProfile</span> = <span style=color:#8be9fd;font-style:italic>$profileManager</span>.GetUserProfile(<span style=color:#8be9fd;font-style:italic>$link</span>.AccountName);
+        <span style=color:#8be9fd;font-style:italic>$userProfile</span>.QuickLinks.Create(<span style=color:#8be9fd;font-style:italic>$link</span>.Title, <span style=color:#8be9fd;font-style:italic>$link</span>.Url, <span style=color:#f1fa8c>&#34;UserSpecified&#34;</span>, <span style=color:#8be9fd;font-style:italic>$link</span>.Group, <span style=color:#8be9fd;font-style:italic>$link</span>.PrivacyLevel) | <span style=color:#8be9fd;font-style:italic>Out-Null</span>
+    }		
+    <span style=color:#ff79c6>Catch</span> {
+        <span style=color:#8be9fd;font-style:italic>Write-Host</span>  <span style=color:#f1fa8c>&#34;</span>$(<span style=color:#8be9fd;font-style:italic>$link</span>.AccountName)<span style=color:#f1fa8c> cannot import </span>$(<span style=color:#8be9fd;font-style:italic>$link</span>.Title)<span style=color:#f1fa8c>&#34;</span> -ForegroundColor DarkYellow
+    }
+}
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>Get-UserProfileManager</span>() {
+    <span style=color:#8be9fd;font-style:italic>$caURL</span> = (<span style=color:#8be9fd;font-style:italic>Get-SPWebApplication</span> -IncludeCentralAdministration | <span style=color:#8be9fd;font-style:italic>Where-Object</span> -FilterScript {
+            <span style=color:#8be9fd;font-style:italic>$_</span>.IsAdministrationWebApplication <span style=color:#ff79c6>-eq</span> <span style=color:#8be9fd;font-style:italic>$true</span>
+        }).Url
+    <span style=color:#8be9fd;font-style:italic>$serviceContext</span> = <span style=color:#8be9fd;font-style:italic>Get-SPServiceContext</span> -Site <span style=color:#8be9fd;font-style:italic>$caURL</span> 
+    <span style=color:#ff79c6>return</span> <span style=color:#8be9fd;font-style:italic>New-Object</span> Microsoft.Office.Server.UserProfiles.UserProfileManager(<span style=color:#8be9fd;font-style:italic>$serviceContext</span>); 
+}
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>ConvertTo-FullXML</span> {
+    [<span style=color:#ff79c6>CmdletBinding</span>()]
+    <span style=color:#ff79c6>param</span> (
+        <span style=color:#6272a4>#Object to Input</span>
+        [<span style=color:#ff79c6>Parameter</span>(<span style=color:#ff79c6>ValueFromPipeline</span>)]<span style=color:#8be9fd;font-style:italic>$InputObject</span>,
+        <span style=color:#6272a4>#Name of the root document node. Defaults to &#34;Objects&#34;</span>
+        <span style=color:#8be9fd;font-style:italic>$RootNodeName</span> = <span style=color:#f1fa8c>&#34;Config&#34;</span>,
+        <span style=color:#8be9fd;font-style:italic>$ObjectName</span> = <span style=color:#8be9fd;font-style:italic>$null</span>
+    )
+    <span style=color:#ff79c6>begin</span> {
+        [xml]<span style=color:#8be9fd;font-style:italic>$Doc</span> = <span style=color:#8be9fd;font-style:italic>New-Object</span> System.Xml.XmlDocument
+        <span style=color:#6272a4>#Add XML Declaration</span>
+        <span style=color:#8be9fd;font-style:italic>$null</span> = <span style=color:#8be9fd;font-style:italic>$doc</span>.AppendChild(<span style=color:#8be9fd;font-style:italic>$doc</span>.CreateXmlDeclaration(<span style=color:#f1fa8c>&#34;1.0&#34;</span>, <span style=color:#f1fa8c>&#34;UTF-8&#34;</span>, <span style=color:#8be9fd;font-style:italic>$null</span>))
+        <span style=color:#6272a4>#Add XML Root Node</span>
+        <span style=color:#8be9fd;font-style:italic>$root</span> = <span style=color:#8be9fd;font-style:italic>$doc</span>.AppendChild(<span style=color:#8be9fd;font-style:italic>$doc</span>.CreateElement(<span style=color:#8be9fd;font-style:italic>$RootNodeName</span>))
+    }
+    <span style=color:#ff79c6>process</span> {
+        <span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>$null</span> <span style=color:#ff79c6>-eq</span> <span style=color:#8be9fd;font-style:italic>$ObjectName</span>) {
+            <span style=color:#8be9fd;font-style:italic>$elementname</span> = <span style=color:#8be9fd;font-style:italic>$InputObject</span>.gettype().name
+        }
+        <span style=color:#ff79c6>else</span> {
+            <span style=color:#8be9fd;font-style:italic>$elementname</span> = <span style=color:#8be9fd;font-style:italic>$ObjectName</span>
+        }
+        <span style=color:#8be9fd;font-style:italic>$childObject</span> = <span style=color:#8be9fd;font-style:italic>$doc</span>.CreateElement(<span style=color:#8be9fd;font-style:italic>$elementname</span>)
+        <span style=color:#ff79c6>foreach</span> (<span style=color:#8be9fd;font-style:italic>$propItem</span> <span style=color:#ff79c6>in</span> <span style=color:#8be9fd;font-style:italic>$InputObject</span>.psobject.properties) {
+            <span style=color:#8be9fd;font-style:italic>$propNode</span> = <span style=color:#8be9fd;font-style:italic>$doc</span>.CreateElement(<span style=color:#8be9fd;font-style:italic>$propItem</span>.Name)
+            <span style=color:#8be9fd;font-style:italic>$propNode</span>.InnerText = <span style=color:#8be9fd;font-style:italic>$propItem</span>.Value
+            <span style=color:#8be9fd;font-style:italic>$null</span> = <span style=color:#8be9fd;font-style:italic>$childObject</span>.AppendChild(<span style=color:#8be9fd;font-style:italic>$propNode</span>)
+        }
+        <span style=color:#8be9fd;font-style:italic>$null</span> = <span style=color:#8be9fd;font-style:italic>$root</span>.AppendChild(<span style=color:#8be9fd;font-style:italic>$childObject</span>)
+    }
+    <span style=color:#ff79c6>end</span> {
+        <span style=color:#ff79c6>return</span> <span style=color:#8be9fd;font-style:italic>$doc</span>.outerxml
+    }
+}
+
+</code></pre></div><p>To run with on export server</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ps1 data-lang=ps1><span style=color:#8be9fd;font-style:italic>$file</span> = <span style=color:#f1fa8c>&#34;c:\temp\profilelinks.xml&#34;</span>
+<span style=color:#8be9fd;font-style:italic>Export-UserProfileLinks</span> <span style=color:#8be9fd;font-style:italic>$file</span>
+</code></pre></div><p>And recreate it on import server</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ps1 data-lang=ps1><span style=color:#8be9fd;font-style:italic>$file</span> = <span style=color:#f1fa8c>&#34;c:\temp\profilelinks.xml&#34;</span>
+<span style=color:#8be9fd;font-style:italic>Import-UserProfileLinks</span> <span style=color:#8be9fd;font-style:italic>$file</span>
+</code></pre></div><h1 id=addition>Addition</h1><p>I like to mention there are also some solution to display these links in modern ui <a href=https://gist.github.com/zplume/ca292d0f03451b285753e681514d182c>sample</a> or <a href=https://www.c-sharpcorner.com/blogs/sharepoint-my-site-my-links>sample 2</a></p><div class=post-author><div class=author-img><img alt="Mathias Osterkamp" src=https://conception365.com/img/mathiasosterkamp_half.png class="avatar avatar-100 photo" height=100 width=100></div><div class=author-content><h5><a href=/top/about/ title="Written by Mathias Osterkamp" rel=author>Mathias Osterkamp</a></h5><p>I've been working for about 10 years with a thematic focus on 'Collaboration' and 'Digital Transformation' especially in the product environment Microsoft on the topics Office 365, SharePoint, Azure and general web development.</p></div></div><script src=https://utteranc.es/client.js repo=MathiasOsterkamp/conception365-com issue-term=url label=question theme=github-light crossorigin=anonymous issue-term=pathname async></script><ul class=pager><li class=previous><a href=https://conception365.com/post/2021-05-02-powerapps-sevdesk-technic/ data-toggle=tooltip data-placement=top title="PowerApps TimeTracking for SevDesk Part 2">&larr;
+Previous Post</a></li></ul></div><div class="col-lg-4
+col-md-4
+sidebar-container"><h5>TOC</h5><nav id=TableOfContents><ul><li><a href=#problem>Problem</a></li><li><a href=#solution>Solution</a></li><li><a href=#addition>Addition</a></li></ul></nav><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>FEATURED TAGS</a></h5><div class=tags><a href=/%20/tags/managed-metadata title=managed-metadata>managed-metadata</a>
+<a href=/%20/tags/powerapps title=powerapps>powerapps</a>
+<a href=/%20/tags/powershell title=powershell>powershell</a>
+<a href=/%20/tags/sevdesk title=sevdesk>sevdesk</a>
+<a href=/%20/tags/sp2019 title=sp2019>sp2019</a></div></section><section><hr><h5>RECENT POSTS</h5><ul class=side-newsfeed><li class=penci-feed><div class=side-item><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-05-06-import-export-userprofilelinks/ rel=bookmark title="Migrate User Profile My Links">Migrate User Profile My Links</a></h4><span class=side-item-meta><time class="entry-date published">Thursday, May 6, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-05-02-powerapps-sevdesk-technic/ title="PowerApps TimeTracking for SevDesk Part 2" style=display:inline-block;background-image:url(/post/2021-05-02-powerapps-sevdesk-technic/header_hu27e9a052c95f34422c9e762dee448c0f_186887_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-05-02-powerapps-sevdesk-technic/ rel=bookmark title="PowerApps TimeTracking for SevDesk Part 2">PowerApps TimeTracking for SevDesk Part 2</a></h4><span class=side-item-meta><time class="entry-date published">Sunday, May 2, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-04-30-powerapps-sevdesk-guide/ title="PowerApps TimeTracking for SevDesk" style=display:inline-block;background-image:url(/post/2021-04-30-powerapps-sevdesk-guide/sevdesk-timetrackingapp_hu0d5007028c53c83e223435b8d44d44e6_225433_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-04-30-powerapps-sevdesk-guide/ rel=bookmark title="PowerApps TimeTracking for SevDesk">PowerApps TimeTracking for SevDesk</a></h4><span class=side-item-meta><time class="entry-date published">Friday, April 30, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-04-22-spfx-2019-prettier-eslint/ title="SPFX 2019 eslint and prettier" style=display:inline-block;background-image:url(/post/2021-04-22-spfx-2019-prettier-eslint/header_hua1954af96b1762f1d3a3328d2299d69c_1557191_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-04-22-spfx-2019-prettier-eslint/ rel=bookmark title="SPFX 2019 eslint and prettier">SPFX 2019 eslint and prettier</a></h4><span class=side-item-meta><time class="entry-date published">Thursday, April 22, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-02-11-orphaned-terms/ rel=bookmark title="Remove Managed Metadata Orphaned Terms">Remove Managed Metadata Orphaned Terms</a></h4><span class=side-item-meta><time class="entry-date published">Thursday, February 11, 2021</time></span></div></div></li></ul></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href rel=alternate type=application/rss+xml title="Mathias Osterkamp"><span class=fa-stack><i class="fas fa-rss"></i></span>
+RSS</a></li><li><a href=mailto:mathias.osterkamp@conception365.com><span class=fa-stack><i class="fas fa-envelope"></i></span>
+Email</a></li><li><a href=/top/impressum/><span>Impressum</span></a></li><li><a href=/top/privacy/><span>Privacy Policy</span></a></li></ul><p class="copyright text-muted">Copyright &copy; Mathias Osterkamp 2021</p></div></div></div></footer></body></html>
