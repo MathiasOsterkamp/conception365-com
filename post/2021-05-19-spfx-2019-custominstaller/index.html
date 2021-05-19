@@ -1,0 +1,112 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:site_name" content="Mathias Osterkamp"><meta property="og:type" content="article"><meta property="og:image" content="/post/2021-05-19-spfx-2019-custominstaller/header_hu390b45efd5d960026afafcbbcc899e56_1405502_350x0_resize_q75_box.jpg"><meta property="twitter:image" content="/post/2021-05-19-spfx-2019-custominstaller/header_hu390b45efd5d960026afafcbbcc899e56_1405502_350x0_resize_q75_box.jpg"><meta name=title content="SPFX 2019 Custom Installer"><meta property="og:title" content="SPFX 2019 Custom Installer"><meta property="twitter:title" content="SPFX 2019 Custom Installer"><meta name=description content><meta property="og:description" content><meta property="twitter:description" content><meta property="twitter:card" content="summary"><meta name=keyword content="SharePoint, Microsoft, Office 365, Teams, Azure, Webdevelopment"><link rel="shortcut icon" href=/%20img/favicon.ico><title>SPFX 2019 Custom Installer-Mathias Osterkamp</title><link rel=canonical href=/post/2021-05-19-spfx-2019-custominstaller/><link rel=preload href=fonts/jost/files/jost-latin-200-normal.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=fonts/jost/files/jost-latin-400-normal.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=fonts/jost/files/jost-latin-500-normal.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=https://conception365.com/main.min.50bc48d2b178bdf1d99650adf9577e5e15189f3c08648f97cf6e84b934bf36bc.css><script type=text/javascript src=/js/bundle.min.e459528320f58ffacd1d26c997631f04a7c3d2ff4f6408fe8e3bc5b970f96fae.js defer></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-JG6K5XRGQL"></script><script>var dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-JG6K5XRGQL',{anonymize_ip:!0})}</script></head><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=site-heading><a href=https://conception365.com><h1>Mathias Osterkamp</h1></a><span class=subheading>Specialist – focus development Microsoft technology stack</span></div></div></div></div></header><nav class="navbar navbar-default navbar-custom"><div class=container><div class="navbar-header page-scroll"><button type=button class=navbar-toggle>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav"><li><a href=/>Home</a></li><li><a href=/categories/administration>administration</a></li><li><a href=/categories/powerapps>powerapps</a></li><li><a href=/categories/spfx>spfx</a></li><li><a href=/top/about/>ABOUT ME</a></li></ul><ul class="nav navbar-nav navbar-right"><li><a href=/search>SEARCH <img src=/img/search.png height=15 style=cursor:pointer alt=Search></a></li></ul></div></div></div></nav><script>var $body=document.body,$toggle=document.querySelector('.navbar-toggle'),$navbar=document.querySelector('#huxblog_navbar'),$collapse=document.querySelector('.navbar-collapse');$toggle.addEventListener('click',handleMagic);function handleMagic(a){$navbar.className.indexOf('in')>0?($navbar.className=" ",setTimeout(function(){$navbar.className.indexOf('in')<0&&($collapse.style.height="0px")},400)):($collapse.style.height="auto",$navbar.className+=" in")}</script><article><div class=container><div class=row><div class="col-lg-8
+col-md-8
+post-container"><div class=post-preview><div class=penci-standard-cat><span class=cat><a class=penci-cat-name href=https://conception365.com/tags/spfx/ rel="category tag">SPFX</a>
+<a class=penci-cat-name href=https://conception365.com/tags/sp2019/ rel="category tag">SP2019</a></span></div><a href=https://conception365.com/post/2021-05-19-spfx-2019-custominstaller/><h2 class=post-title>SPFX 2019 Custom Installer</h2></a><h2 class=post-subtitle>How create a custom installer for your SFPX solution</h2><span class=post-meta>Written by
+Mathias Osterkamp
+on
+Wednesday, May 19, 2021</span>
+<img src=/post/2021-05-19-spfx-2019-custominstaller/header_hu390b45efd5d960026afafcbbcc899e56_1405502_800x0_resize_q75_box.jpg></div><h1 id=what-we-create>What we create</h1><p>In SharePoint SPFX solution development you have most time the requirement to do some installation tasks. You have multiple solutions for that problem. First - most content can be deployed via XML manifest files to your website. This helps you with the most basic stuff, but if you like to do some more modifications, for example set special permissions on lists or deploy webparts to your page, it have to be done extra.</p><p>To reach this advanced installation we use an application customizer. This customizer is running once and just executed directly after install your app. Inside the customizer you can run further code to perform every action you like.</p><h1 id=how-it-looks>How it looks</h1><p>It is starting with the basic app installation. So select your app from &ldquo;Add an app&rdquo; dialog.</p><p><img src=install-spfx.png alt=AppInstallation loading=lazy></p><p>After finished installation, refresh your page and you will get a short install notice. You could also set up some configuration wizard or deny the installation for some reason.</p><p><img src=install-staff.png alt=AppInstallation loading=lazy></p><p>After successful installation you will get a dialog message and everything is done.</p><h1 id=how-it-is-build>How it is build</h1><p>You start with an default application customizer. You can add this via yeoman generator.</p><p>On the <em>onInit</em> function we call our install and remove the customizer after successful installation.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=color:#ff79c6>public</span> <span style=color:#ff79c6>async</span> onInit()<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>void</span>&gt; {
+    Log.info(LOG_SOURCE, <span style=color:#f1fa8c>`Initialized </span><span style=color:#f1fa8c>${</span>strings.Title<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>`</span>);
+    <span style=color:#6272a4>//do this only as site admin
+</span><span style=color:#6272a4></span>    <span style=color:#ff79c6>if</span> (<span style=color:#ff79c6>this</span>.context.pageContext.legacyPageContext.isSiteAdmin) {
+      <span style=color:#ff79c6>try</span> {
+        <span style=color:#6272a4>//do installation
+</span><span style=color:#6272a4></span>        <span style=color:#ff79c6>await</span> <span style=color:#ff79c6>this</span>.install();
+        <span style=color:#6272a4>//if everything fine remove customizer
+</span><span style=color:#6272a4></span>        <span style=color:#ff79c6>await</span> <span style=color:#ff79c6>this</span>.removeCustomizer(<span style=color:#ff79c6>this</span>.componentId);
+        Log.info(LOG_SOURCE, <span style=color:#f1fa8c>&#34;Removed customizer&#34;</span>, <span style=color:#ff79c6>this</span>.context.serviceScope);
+        <span style=color:#ff79c6>await</span> Dialog.alert(<span style=color:#f1fa8c>`Success. Refresh page!`</span>);
+      } <span style=color:#ff79c6>catch</span> (err) {
+        console.log(err);
+        Log.error(LOG_SOURCE, err, <span style=color:#ff79c6>this</span>.context.serviceScope);
+        <span style=color:#ff79c6>await</span> Dialog.alert(<span style=color:#f1fa8c>`Error`</span>);
+      }
+    }
+    <span style=color:#ff79c6>return</span> Promise.resolve();
+  }
+</code></pre></div><p>The <em>install</em> function contains all your install logic you need. Be sure that you do not forget to handle errors and maybe redo the installation until everything is fine.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=color:#ff79c6>private</span> <span style=color:#ff79c6>async</span> install()<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>void</span>&gt; {
+    <span style=color:#ff79c6>await</span> Dialog.alert(<span style=color:#f1fa8c>`Do some install stuff.`</span>);
+    <span style=color:#ff79c6>return</span>;
+  }
+</code></pre></div><p>To finish our installation we need to remove our customizer from the custom actions.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts><span style=color:#ff79c6>protected</span> removeCustomizer(componentId: <span style=color:#8be9fd>string</span>) {
+    <span style=color:#ff79c6>try</span> {
+      <span style=color:#ff79c6>this</span>._getdigest().then((digrestJson) <span style=color:#ff79c6>=&gt;</span> {
+        console.log(digrestJson);
+        <span style=color:#ff79c6>const</span> digest <span style=color:#ff79c6>=</span> digrestJson.FormDigestValue;
+        <span style=color:#ff79c6>const</span> headers <span style=color:#ff79c6>=</span> {
+          <span style=color:#f1fa8c>&#34;X-RequestDigest&#34;</span><span style=color:#ff79c6>:</span> digest,
+          <span style=color:#f1fa8c>&#34;content-type&#34;</span><span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#34;application/json;odata=verbose&#34;</span>,
+        };
+        <span style=color:#ff79c6>const</span> spOpts: <span style=color:#8be9fd>ISPHttpClientOptions</span> <span style=color:#ff79c6>=</span> {};
+        <span style=color:#ff79c6>this</span>.context.spHttpClient
+          .<span style=color:#ff79c6>get</span>(
+            <span style=color:#ff79c6>this</span>.context.pageContext.web.absoluteUrl <span style=color:#ff79c6>+</span>
+              <span style=color:#f1fa8c>`/_api/web/UserCustomActions`</span>,
+            SPHttpClient.configurations.v1,
+            spOpts
+          )
+          .then((response: <span style=color:#8be9fd>SPHttpClientResponse</span>) <span style=color:#ff79c6>=&gt;</span> {
+            response.json().then((responseJSON: <span style=color:#8be9fd>any</span>) <span style=color:#ff79c6>=&gt;</span> {
+              console.log(responseJSON);
+
+              responseJSON.value.forEach((element) <span style=color:#ff79c6>=&gt;</span> {
+                <span style=color:#6272a4>//Match custom action
+</span><span style=color:#6272a4></span>                <span style=color:#ff79c6>if</span> (element.ClientSideComponentId <span style=color:#ff79c6>==</span> componentId) {
+                  <span style=color:#6272a4>//found custom action, call REST API to delete object
+</span><span style=color:#6272a4></span>                  <span style=color:#ff79c6>this</span>.context.spHttpClient
+                    .post(
+                      <span style=color:#ff79c6>this</span>.context.pageContext.web.absoluteUrl <span style=color:#ff79c6>+</span>
+                        <span style=color:#f1fa8c>&#34;/_api/web/UserCustomActions(@v0)/deleteObject()?@v0=guid&#39;&#34;</span> <span style=color:#ff79c6>+</span>
+                        element.Id <span style=color:#ff79c6>+</span>
+                        <span style=color:#f1fa8c>&#34;&#39;&#34;</span>,
+                      SPHttpClient.configurations.v1,
+                      spOpts
+                    )
+                    .then((response: <span style=color:#8be9fd>SPHttpClientResponse</span>) <span style=color:#ff79c6>=&gt;</span> {
+                      console.log(
+                        <span style=color:#f1fa8c>&#34;I think I just deleted a custom action via REST API---&#34;</span>
+                      );
+                    });
+                }
+              });
+            });
+          });
+      });
+    } <span style=color:#ff79c6>catch</span> (error) {
+      console.error(error);
+    }
+  }
+</code></pre></div><p>To get everything running you also need to setup your package-solution with the feature and add your customizer as custom action. Hint: This works only for apps installed on a website.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=color:#f1fa8c>&#34;skipFeatureDeployment&#34;</span>: <span style=color:#ff79c6>false</span>,
+  <span style=color:#f1fa8c>&#34;features&#34;</span>: [
+    {
+      <span style=color:#ff79c6>&#34;title&#34;</span>: <span style=color:#f1fa8c>&#34;Application Extension - Deployment of custom action.&#34;</span>,
+      <span style=color:#ff79c6>&#34;description&#34;</span>: <span style=color:#f1fa8c>&#34;Deploys a custom action with ClientSideComponentId association&#34;</span>,
+      <span style=color:#ff79c6>&#34;id&#34;</span>: <span style=color:#f1fa8c>&#34;a4b2f6ab-5e1b-4b6c-aa40-f4a708929633&#34;</span>,
+      <span style=color:#ff79c6>&#34;version&#34;</span>: <span style=color:#f1fa8c>&#34;1.0.0.0&#34;</span>,
+      <span style=color:#ff79c6>&#34;assets&#34;</span>: {
+        <span style=color:#ff79c6>&#34;elementManifests&#34;</span>: [
+          <span style=color:#f1fa8c>&#34;elements.xml&#34;</span>,
+          <span style=color:#f1fa8c>&#34;CustomInstallerApplicationCustomizer.xml&#34;</span>
+        ]
+      }
+    }
+  ]
+</code></pre></div><p>To provision your custom action you add the <em>CustomInstallerApplicationCustomizer.xml</em> on the assets folder.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=color:#ff79c6>&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34;?&gt;</span>
+<span style=color:#ff79c6>&lt;Elements</span> <span style=color:#50fa7b>xmlns=</span><span style=color:#f1fa8c>&#34;http://schemas.microsoft.com/sharepoint/&#34;</span><span style=color:#ff79c6>&gt;</span>
+    <span style=color:#ff79c6>&lt;CustomAction</span> <span style=color:#50fa7b>Title=</span><span style=color:#f1fa8c>&#34;CustomInstallerApplicationCustomizer&#34;</span> <span style=color:#50fa7b>Location=</span><span style=color:#f1fa8c>&#34;ClientSideExtension.ApplicationCustomizer&#34;</span> <span style=color:#50fa7b>ClientSideComponentId=</span><span style=color:#f1fa8c>&#34;6cc39d9d-d730-4352-8212-7108749e04f9&#34;</span><span style=color:#ff79c6>&gt;</span>
+    <span style=color:#ff79c6>&lt;/CustomAction&gt;</span>
+<span style=color:#ff79c6>&lt;/Elements&gt;</span>
+</code></pre></div><p>Thats everything to go! Smart hint, it deploys automatically a feature (like shown in solution config). You can manual deactivate this feature on your web settings and after reactivation the installer runs again.</p><p>Full code <a href=https://github.com/MathiasOsterkamp/spfx-2019-solution>here</a>.</p><div class=post-author><div class=author-img><img alt="Mathias Osterkamp" src=https://conception365.com/img/mathiasosterkamp_half.png class="avatar avatar-100 photo" height=100 width=100></div><div class=author-content><h5><a href=/top/about/ title="Written by Mathias Osterkamp" rel=author>Mathias Osterkamp</a></h5><p>I've been working for about 10 years with a thematic focus on 'Collaboration' and 'Digital Transformation' especially in the product environment Microsoft on the topics Office 365, SharePoint, Azure and general web development.</p></div></div><ul class=pager><li class=previous><a href=https://conception365.com/post/2021-05-06-import-export-userprofilelinks/ data-toggle=tooltip data-placement=top title="Migrate User Profile My Links">&larr;
+Previous Post<div class=pager-title>Migrate User Profile My Links</div></a></li></ul><br><script src=https://utteranc.es/client.js repo=MathiasOsterkamp/conception365-com issue-term=url label=question theme=github-light crossorigin=anonymous issue-term=pathname async></script></div><div class="col-lg-4
+col-md-4
+sidebar-container"><h5>TOC</h5><nav id=TableOfContents><ul><li><a href=#what-we-create>What we create</a></li><li><a href=#how-it-looks>How it looks</a></li><li><a href=#how-it-is-build>How it is build</a></li></ul></nav><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>FEATURED TAGS</a></h5><div class=tags><a href=/tags/managed-metadata title=managed-metadata>managed-metadata</a>
+<a href=/tags/pnp title=pnp>pnp</a>
+<a href=/tags/powerapps title=powerapps>powerapps</a>
+<a href=/tags/powershell title=powershell>powershell</a>
+<a href=/tags/sevdesk title=sevdesk>sevdesk</a>
+<a href=/tags/sp2019 title=sp2019>sp2019</a>
+<a href=/tags/spfx title=spfx>spfx</a></div></section><section><hr><h5>RECENT POSTS</h5><ul class=side-newsfeed><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-05-19-spfx-2019-custominstaller/ title="SPFX 2019 Custom Installer" style=display:inline-block;background-image:url(/post/2021-05-19-spfx-2019-custominstaller/header_hu390b45efd5d960026afafcbbcc899e56_1405502_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-05-19-spfx-2019-custominstaller/ rel=bookmark title="SPFX 2019 Custom Installer">SPFX 2019 Custom Installer</a></h4><span class=side-item-meta><time class="entry-date published">Wednesday, May 19, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-05-06-import-export-userprofilelinks/ rel=bookmark title="Migrate User Profile My Links">Migrate User Profile My Links</a></h4><span class=side-item-meta><time class="entry-date published">Thursday, May 6, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-05-02-powerapps-sevdesk-technic/ title="PowerApps TimeTracking for SevDesk Part 2" style=display:inline-block;background-image:url(/post/2021-05-02-powerapps-sevdesk-technic/header_hu27e9a052c95f34422c9e762dee448c0f_186887_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-05-02-powerapps-sevdesk-technic/ rel=bookmark title="PowerApps TimeTracking for SevDesk Part 2">PowerApps TimeTracking for SevDesk Part 2</a></h4><span class=side-item-meta><time class="entry-date published">Sunday, May 2, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-04-30-powerapps-sevdesk-guide/ title="PowerApps TimeTracking for SevDesk" style=display:inline-block;background-image:url(/post/2021-04-30-powerapps-sevdesk-guide/sevdesk-timetrackingapp_hu0d5007028c53c83e223435b8d44d44e6_225433_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-04-30-powerapps-sevdesk-guide/ rel=bookmark title="PowerApps TimeTracking for SevDesk">PowerApps TimeTracking for SevDesk</a></h4><span class=side-item-meta><time class="entry-date published">Friday, April 30, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-04-22-spfx-2019-prettier-eslint/ title="SPFX 2019 eslint and prettier" style=display:inline-block;background-image:url(/post/2021-04-22-spfx-2019-prettier-eslint/header_hua1954af96b1762f1d3a3328d2299d69c_1557191_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-04-22-spfx-2019-prettier-eslint/ rel=bookmark title="SPFX 2019 eslint and prettier">SPFX 2019 eslint and prettier</a></h4><span class=side-item-meta><time class="entry-date published">Thursday, April 22, 2021</time></span></div></div></li></ul></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href rel=alternate type=application/rss+xml title="Mathias Osterkamp"><span class=fa-stack><i class="fas fa-rss"></i></span>
+RSS</a></li><li><a href=mailto:mathias.osterkamp@conception365.com><span class=fa-stack><i class="fas fa-envelope"></i></span>
+Email</a></li><li><a href=/top/impressum/><span>Impressum</span></a></li><li><a href=/top/privacy/><span>Privacy Policy</span></a></li></ul><p class="copyright text-muted">Copyright &copy; Mathias Osterkamp 2021</p></div></div></div></footer></body></html>
