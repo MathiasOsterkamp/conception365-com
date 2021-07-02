@@ -1,0 +1,273 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:site_name" content="Mathias Osterkamp"><meta property="og:type" content="article"><meta property="og:image" content="/post/2021-07-02-spfx-publish-classic-listforms/header_hu85d3c1c876d444d957e552a5fabdf1f3_1303364_350x0_resize_q75_box.jpg"><meta property="twitter:image" content="/post/2021-07-02-spfx-publish-classic-listforms/header_hu85d3c1c876d444d957e552a5fabdf1f3_1303364_350x0_resize_q75_box.jpg"><meta name=title content="Javascript - Publish classic list form webparts"><meta property="og:title" content="Javascript - Publish classic list form webparts"><meta property="twitter:title" content="Javascript - Publish classic list form webparts"><meta name=description content><meta property="og:description" content><meta property="twitter:description" content><meta property="twitter:card" content="summary"><meta name=keyword content="SharePoint, Microsoft, Office 365, Teams, Azure, Webdevelopment"><link rel="shortcut icon" href=/%20img/favicon.ico><title>Javascript - Publish classic list form webparts-Mathias Osterkamp</title><link rel=canonical href=/post/2021-07-02-spfx-publish-classic-listforms/><link rel=preload href=fonts/jost/files/jost-latin-200-normal.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=fonts/jost/files/jost-latin-400-normal.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=fonts/jost/files/jost-latin-500-normal.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=https://conception365.com/main.min.50bc48d2b178bdf1d99650adf9577e5e15189f3c08648f97cf6e84b934bf36bc.css><script type=text/javascript src=/js/bundle.min.e459528320f58ffacd1d26c997631f04a7c3d2ff4f6408fe8e3bc5b970f96fae.js defer></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-JG6K5XRGQL"></script><script>var dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-JG6K5XRGQL',{anonymize_ip:!0})}</script></head><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=site-heading><a href=https://conception365.com><h1>Mathias Osterkamp</h1></a><span class=subheading>Specialist – focus development Microsoft technology stack</span></div></div></div></div></header><nav class="navbar navbar-default navbar-custom"><div class=container><div class="navbar-header page-scroll"><button type=button class=navbar-toggle>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav"><li><a href=/>Home</a></li><li><a href=/categories/administration>administration</a></li><li><a href=/categories/powerapps>powerapps</a></li><li><a href=/categories/spfx>spfx</a></li><li><a href=/top/about/>ABOUT ME</a></li></ul><ul class="nav navbar-nav navbar-right"><li><a href=/search>SEARCH <img src=/img/search.png height=15 style=cursor:pointer alt=Search></a></li></ul></div></div></div></nav><script>var $body=document.body,$toggle=document.querySelector('.navbar-toggle'),$navbar=document.querySelector('#huxblog_navbar'),$collapse=document.querySelector('.navbar-collapse');$toggle.addEventListener('click',handleMagic);function handleMagic(a){$navbar.className.indexOf('in')>0?($navbar.className=" ",setTimeout(function(){$navbar.className.indexOf('in')<0&&($collapse.style.height="0px")},400)):($collapse.style.height="auto",$navbar.className+=" in")}</script><article><div class=container><div class=row><div class="col-lg-8
+col-md-8
+post-container"><div class=post-preview><div class=penci-standard-cat><span class=cat><a class=penci-cat-name href=https://conception365.com/tags/spfx/ rel="category tag">SPFX</a>
+<a class=penci-cat-name href=https://conception365.com/tags/sp2019/ rel="category tag">SP2019</a></span></div><a href=https://conception365.com/post/2021-07-02-spfx-publish-classic-listforms/><h2 class=post-title>Javascript - Publish classic list form webparts</h2></a><h2 class=post-subtitle></h2><span class=post-meta>Written by
+Mathias Osterkamp
+on
+Friday, July 2, 2021</span>
+<img src=/post/2021-07-02-spfx-publish-classic-listforms/header_hu85d3c1c876d444d957e552a5fabdf1f3_1303364_800x0_resize_q75_box.jpg></div><h1 id=problem>Problem</h1><p>For classic SharePoint 2019 libraries you still need your EditForm.aspx and DispForm.aspx to edit your properties. If you like to make any changes, <strong>create</strong> another form page or <strong>repair</strong> it by code, it is a little bit more complicated. Most time you try to edit the &ldquo;DefaultEditFormUrl&rdquo; property of your list. If you try to change the &ldquo;DefaultEditFormUrl&rdquo; property it leads some time to the following error:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cmd data-lang=cmd>Unable to find an SPForm matching URL...
+</code></pre></div><p>The reason is, sharepoint evaluates your target url and try to find the form on the page. So you have also to upload the list form webpart.</p><h1 id=solution>Solution</h1><p>Here i show some helpers to realise this with javascript code. Most samples on internet are powershell, but doing this in a SPFX solution it is also very smart. We use here some help from pnp js (<a href=https://pnp.github.io/pnpjs/>https://pnp.github.io/pnpjs/</a>) framework. You can download the content of the aspx file from a existing library by open your folder in internet explorer and copy the file.</p><h2 id=upload-your-editformaspx>Upload your editform.aspx</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts>
+<span style=color:#ff79c6>const</span> folderUrl <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#39;/sites/sitecollection/library/&#39;</span>;
+<span style=color:#ff79c6>const</span> dispFormUrl <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>`</span><span style=color:#f1fa8c>${</span>folderUrl<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>/Forms/EditForm.aspx`</span>;
+<span style=color:#ff79c6>const</span> content <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>`..........`</span>; <span style=color:#6272a4>//replace your content
+</span><span style=color:#6272a4></span><span style=color:#ff79c6>await</span> <span style=color:#ff79c6>this</span>.uploadFile(folderUrl, dispFormUrl, content);
+
+<span style=color:#6272a4>/**
+</span><span style=color:#6272a4>  * Upload a file from a library
+</span><span style=color:#6272a4>  *
+</span><span style=color:#6272a4>  * @param folderUrl relative path of a library or the folder in a library
+</span><span style=color:#6272a4>  * @param fileUrl new relative url of the file
+</span><span style=color:#6272a4>  * @param content content of the file
+</span><span style=color:#6272a4>  */</span>
+<span style=color:#ff79c6>public</span> <span style=color:#ff79c6>async</span> uploadFile(folderUrl: <span style=color:#8be9fd>string</span>, fileUrl: <span style=color:#8be9fd>string</span>, content: <span style=color:#8be9fd>Blob</span> <span style=color:#ff79c6>|</span> ArrayBuffer <span style=color:#ff79c6>|</span> <span style=color:#8be9fd>string</span>)<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>void</span>&gt; {
+  <span style=color:#ff79c6>const</span> props: <span style=color:#8be9fd>IAddUsingPathProps</span> <span style=color:#ff79c6>=</span> { Overwrite: <span style=color:#8be9fd>true</span> };
+  <span style=color:#ff79c6>await</span> sp.web.getFolderByServerRelativeUrl(folderUrl).files.addUsingPath(fileUrl, content, props);
+} 
+
+</code></pre></div><h2 id=import-webparts>Import Webparts</h2><p>You need to import the list webpart, don&rsquo;t forget to set the listid. Your class should also have a property for spHttpClient and absoluteWebUrl from pnp js.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts>
+<span style=color:#ff79c6>const</span> listInfoId:<span style=color:#8be9fd>string</span> <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>&#39;xxxxx-xx-xxxx-..&#39;</span>;
+
+<span style=color:#ff79c6>const</span> editwebpartxml <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>`&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34;?&gt;
+</span><span style=color:#f1fa8c>  &lt;WebPart xmlns:xsd=&#34;http://www.w3.org/2001/XMLSchema&#34; xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34; xmlns=&#34;http://schemas.microsoft.com/WebPart/v2&#34;&gt;
+</span><span style=color:#f1fa8c>    &lt;Title /&gt;
+</span><span style=color:#f1fa8c>    &lt;FrameType&gt;Default&lt;/FrameType&gt;
+</span><span style=color:#f1fa8c>    &lt;Description /&gt;
+</span><span style=color:#f1fa8c>    &lt;IsIncluded&gt;true&lt;/IsIncluded&gt;
+</span><span style=color:#f1fa8c>    &lt;ZoneID&gt;Main&lt;/ZoneID&gt;
+</span><span style=color:#f1fa8c>    &lt;PartOrder&gt;1&lt;/PartOrder&gt;
+</span><span style=color:#f1fa8c>    &lt;FrameState&gt;Normal&lt;/FrameState&gt;
+</span><span style=color:#f1fa8c>    &lt;Height /&gt;
+</span><span style=color:#f1fa8c>    &lt;Width /&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowRemove&gt;true&lt;/AllowRemove&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowZoneChange&gt;true&lt;/AllowZoneChange&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowMinimize&gt;true&lt;/AllowMinimize&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowConnect&gt;true&lt;/AllowConnect&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowEdit&gt;true&lt;/AllowEdit&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowHide&gt;true&lt;/AllowHide&gt;
+</span><span style=color:#f1fa8c>    &lt;IsVisible&gt;true&lt;/IsVisible&gt;
+</span><span style=color:#f1fa8c>    &lt;DetailLink /&gt;
+</span><span style=color:#f1fa8c>    &lt;HelpLink /&gt;
+</span><span style=color:#f1fa8c>    &lt;HelpMode&gt;Modeless&lt;/HelpMode&gt;
+</span><span style=color:#f1fa8c>    &lt;Dir&gt;Default&lt;/Dir&gt;
+</span><span style=color:#f1fa8c>    &lt;PartImageSmall /&gt;
+</span><span style=color:#f1fa8c>    &lt;MissingAssembly&gt;Dieses Webpart kann nicht importiert werden.&lt;/MissingAssembly&gt;
+</span><span style=color:#f1fa8c>    &lt;PartImageLarge /&gt;
+</span><span style=color:#f1fa8c>    &lt;IsIncludedFilter /&gt;
+</span><span style=color:#f1fa8c>    &lt;Assembly&gt;Microsoft.SharePoint, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c&lt;/Assembly&gt;
+</span><span style=color:#f1fa8c>    &lt;TypeName&gt;Microsoft.SharePoint.WebPartPages.ListFormWebPart&lt;/TypeName&gt;
+</span><span style=color:#f1fa8c>    &lt;ListName xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;{</span><span style=color:#f1fa8c>${</span>listInfoId<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>}&lt;/ListName&gt;
+</span><span style=color:#f1fa8c>    &lt;ListId xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;</span><span style=color:#f1fa8c>${</span>listInfoId<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>&lt;/ListId&gt;
+</span><span style=color:#f1fa8c>    &lt;PageType xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;PAGE_EDITFORM&lt;/PageType&gt;
+</span><span style=color:#f1fa8c>    &lt;FormType xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;6&lt;/FormType&gt;
+</span><span style=color:#f1fa8c>    &lt;ControlMode xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;Edit&lt;/ControlMode&gt;
+</span><span style=color:#f1fa8c>    &lt;ViewFlag xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;1048576&lt;/ViewFlag&gt;
+</span><span style=color:#f1fa8c>    &lt;ViewFlags xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;Default&lt;/ViewFlags&gt;
+</span><span style=color:#f1fa8c>    &lt;ListItemId xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;0&lt;/ListItemId&gt;
+</span><span style=color:#f1fa8c>  &lt;/WebPart&gt;`</span>;
+
+<span style=color:#ff79c6>const</span> displaywebpartxml <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>`&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34;?&gt;
+</span><span style=color:#f1fa8c>  &lt;WebPart xmlns:xsd=&#34;http://www.w3.org/2001/XMLSchema&#34; xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34; xmlns=&#34;http://schemas.microsoft.com/WebPart/v2&#34;&gt;
+</span><span style=color:#f1fa8c>    &lt;Title /&gt;
+</span><span style=color:#f1fa8c>    &lt;FrameType&gt;Default&lt;/FrameType&gt;
+</span><span style=color:#f1fa8c>    &lt;Description /&gt;
+</span><span style=color:#f1fa8c>    &lt;IsIncluded&gt;true&lt;/IsIncluded&gt;
+</span><span style=color:#f1fa8c>    &lt;ZoneID&gt;Main&lt;/ZoneID&gt;
+</span><span style=color:#f1fa8c>    &lt;PartOrder&gt;1&lt;/PartOrder&gt;
+</span><span style=color:#f1fa8c>    &lt;FrameState&gt;Normal&lt;/FrameState&gt;
+</span><span style=color:#f1fa8c>    &lt;Height /&gt;
+</span><span style=color:#f1fa8c>    &lt;Width /&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowRemove&gt;true&lt;/AllowRemove&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowZoneChange&gt;true&lt;/AllowZoneChange&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowMinimize&gt;true&lt;/AllowMinimize&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowConnect&gt;true&lt;/AllowConnect&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowEdit&gt;true&lt;/AllowEdit&gt;
+</span><span style=color:#f1fa8c>    &lt;AllowHide&gt;true&lt;/AllowHide&gt;
+</span><span style=color:#f1fa8c>    &lt;IsVisible&gt;true&lt;/IsVisible&gt;
+</span><span style=color:#f1fa8c>    &lt;DetailLink /&gt;
+</span><span style=color:#f1fa8c>    &lt;HelpLink /&gt;
+</span><span style=color:#f1fa8c>    &lt;HelpMode&gt;Modeless&lt;/HelpMode&gt;
+</span><span style=color:#f1fa8c>    &lt;Dir&gt;Default&lt;/Dir&gt;
+</span><span style=color:#f1fa8c>    &lt;PartImageSmall /&gt;
+</span><span style=color:#f1fa8c>    &lt;MissingAssembly&gt;Dieses Webpart kann nicht importiert werden.&lt;/MissingAssembly&gt;
+</span><span style=color:#f1fa8c>    &lt;PartImageLarge /&gt;
+</span><span style=color:#f1fa8c>    &lt;IsIncludedFilter /&gt;
+</span><span style=color:#f1fa8c>    &lt;Assembly&gt;Microsoft.SharePoint, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c&lt;/Assembly&gt;
+</span><span style=color:#f1fa8c>    &lt;TypeName&gt;Microsoft.SharePoint.WebPartPages.ListFormWebPart&lt;/TypeName&gt;
+</span><span style=color:#f1fa8c>    &lt;ListName xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;{</span><span style=color:#f1fa8c>${</span>listInfoId<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>}&lt;/ListName&gt;
+</span><span style=color:#f1fa8c>    &lt;ListId xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;</span><span style=color:#f1fa8c>${</span>listInfoId<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>&lt;/ListId&gt;
+</span><span style=color:#f1fa8c>    &lt;PageType xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;PAGE_DISPLAYFORM&lt;/PageType&gt;
+</span><span style=color:#f1fa8c>    &lt;FormType xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;4&lt;/FormType&gt;
+</span><span style=color:#f1fa8c>    &lt;ControlMode xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;Display&lt;/ControlMode&gt;
+</span><span style=color:#f1fa8c>    &lt;ViewFlag xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;1048576&lt;/ViewFlag&gt;
+</span><span style=color:#f1fa8c>    &lt;ViewFlags xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;Default&lt;/ViewFlags&gt;
+</span><span style=color:#f1fa8c>    &lt;ListItemId xmlns=&#34;http://schemas.microsoft.com/WebPart/v2/ListForm&#34;&gt;0&lt;/ListItemId&gt;
+</span><span style=color:#f1fa8c>  &lt;/WebPart&gt;`</span>;
+
+
+<span style=color:#ff79c6>await</span> <span style=color:#ff79c6>this</span>.importClassicPageWebpart(dispFormUrl, <span style=color:#f1fa8c>&#39;Main&#39;</span>, <span style=color:#bd93f9>1</span>, displaywebpartxml);
+<span style=color:#ff79c6>await</span> <span style=color:#ff79c6>this</span>.importClassicPageWebpart(editFormUrl, <span style=color:#f1fa8c>&#39;Main&#39;</span>, <span style=color:#bd93f9>1</span>, editwebpartxml);
+
+
+<span style=color:#6272a4>/**
+</span><span style=color:#6272a4>  * Imports webpart on classic page
+</span><span style=color:#6272a4>  * @param pageUrl
+</span><span style=color:#6272a4>  * @param zone Main
+</span><span style=color:#6272a4>  * @param order 1
+</span><span style=color:#6272a4>  * @param webpartxml
+</span><span style=color:#6272a4>  * @returns
+</span><span style=color:#6272a4>  */</span>
+<span style=color:#ff79c6>public</span> <span style=color:#ff79c6>async</span> importClassicPageWebpart(
+  pageUrl: <span style=color:#8be9fd>string</span>,
+  zone: <span style=color:#8be9fd>string</span>,
+  order: <span style=color:#8be9fd>number</span>,
+  webpartxml: <span style=color:#8be9fd>string</span>
+)<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>void</span>&gt; {
+  <span style=color:#ff79c6>const</span> webid <span style=color:#ff79c6>=</span> (<span style=color:#ff79c6>await</span> sp.web.<span style=color:#ff79c6>get</span>()).Id;
+  <span style=color:#ff79c6>const</span> siteid <span style=color:#ff79c6>=</span> (<span style=color:#ff79c6>await</span> sp.site.<span style=color:#ff79c6>get</span>()).Id;
+  webpartxml <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>this</span>.encodeXml(webpartxml);
+  <span style=color:#ff79c6>const</span> requestBody <span style=color:#ff79c6>=</span> <span style=color:#f1fa8c>`&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+</span><span style=color:#f1fa8c>  &lt;Request
+</span><span style=color:#f1fa8c>  xmlns=&#34;http://schemas.microsoft.com/sharepoint/clientquery/2009&#34; SchemaVersion=&#34;15.0.0.0&#34; LibraryVersion=&#34;16.0.0.0&#34; ApplicationName=&#34;Javascript Library&#34;&gt;
+</span><span style=color:#f1fa8c>  &lt;Actions&gt;
+</span><span style=color:#f1fa8c>    &lt;ObjectPath Id=&#34;41&#34; ObjectPathId=&#34;40&#34; /&gt;
+</span><span style=color:#f1fa8c>    &lt;ObjectPath Id=&#34;43&#34; ObjectPathId=&#34;42&#34; /&gt;
+</span><span style=color:#f1fa8c>    &lt;ObjectIdentityQuery Id=&#34;44&#34; ObjectPathId=&#34;42&#34; /&gt;
+</span><span style=color:#f1fa8c>    &lt;ObjectPath Id=&#34;46&#34; ObjectPathId=&#34;45&#34; /&gt;
+</span><span style=color:#f1fa8c>    &lt;ObjectPath Id=&#34;48&#34; ObjectPathId=&#34;47&#34; /&gt;
+</span><span style=color:#f1fa8c>    &lt;ObjectIdentityQuery Id=&#34;49&#34; ObjectPathId=&#34;47&#34; /&gt;
+</span><span style=color:#f1fa8c>    &lt;Query Id=&#34;50&#34; ObjectPathId=&#34;45&#34;&gt;
+</span><span style=color:#f1fa8c>      &lt;Query SelectAllProperties=&#34;true&#34;&gt;
+</span><span style=color:#f1fa8c>        &lt;Properties /&gt;
+</span><span style=color:#f1fa8c>      &lt;/Query&gt;
+</span><span style=color:#f1fa8c>    &lt;/Query&gt;
+</span><span style=color:#f1fa8c>  &lt;/Actions&gt;
+</span><span style=color:#f1fa8c>  &lt;ObjectPaths&gt;
+</span><span style=color:#f1fa8c>    &lt;Method Id=&#34;40&#34; ParentId=&#34;28&#34; Name=&#34;GetLimitedWebPartManager&#34;&gt;
+</span><span style=color:#f1fa8c>      &lt;Parameters&gt;
+</span><span style=color:#f1fa8c>        &lt;Parameter Type=&#34;Number&#34;&gt;1&lt;/Parameter&gt;
+</span><span style=color:#f1fa8c>      &lt;/Parameters&gt;
+</span><span style=color:#f1fa8c>    &lt;/Method&gt;
+</span><span style=color:#f1fa8c>    &lt;Method Id=&#34;42&#34; ParentId=&#34;40&#34; Name=&#34;ImportWebPart&#34;&gt;
+</span><span style=color:#f1fa8c>      &lt;Parameters&gt;
+</span><span style=color:#f1fa8c>        &lt;Parameter Type=&#34;String&#34;&gt;</span><span style=color:#f1fa8c>${</span>webpartxml<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>&lt;/Parameter&gt;
+</span><span style=color:#f1fa8c>      &lt;/Parameters&gt;
+</span><span style=color:#f1fa8c>    &lt;/Method&gt;
+</span><span style=color:#f1fa8c>    &lt;Property Id=&#34;45&#34; ParentId=&#34;42&#34; Name=&#34;WebPart&#34; /&gt;
+</span><span style=color:#f1fa8c>    &lt;Method Id=&#34;47&#34; ParentId=&#34;40&#34; Name=&#34;AddWebPart&#34;&gt;
+</span><span style=color:#f1fa8c>      &lt;Parameters&gt;
+</span><span style=color:#f1fa8c>        &lt;Parameter ObjectPathId=&#34;45&#34; /&gt;
+</span><span style=color:#f1fa8c>        &lt;Parameter Type=&#34;String&#34;&gt;</span><span style=color:#f1fa8c>${</span>zone<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>&lt;/Parameter&gt;
+</span><span style=color:#f1fa8c>        &lt;Parameter Type=&#34;Number&#34;&gt;</span><span style=color:#f1fa8c>${</span>order<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>&lt;/Parameter&gt;
+</span><span style=color:#f1fa8c>      &lt;/Parameters&gt;
+</span><span style=color:#f1fa8c>    &lt;/Method&gt;
+</span><span style=color:#f1fa8c>    &lt;Identity Id=&#34;28&#34; Name=&#34;82d7c99e-f015-0000-6402-fdbb9f2aa54d|740c6a0b-85e2-48a0-a494-e0f1759d4aa7:site:</span><span style=color:#f1fa8c>${</span>siteid<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>:web:</span><span style=color:#f1fa8c>${</span>webid<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>:file:</span><span style=color:#f1fa8c>${</span>pageUrl<span style=color:#f1fa8c>}</span><span style=color:#f1fa8c>&#34; /&gt;
+</span><span style=color:#f1fa8c>  &lt;/ObjectPaths&gt;
+</span><span style=color:#f1fa8c>&lt;/Request&gt;`</span>;
+  <span style=color:#ff79c6>return</span> <span style=color:#ff79c6>await</span> <span style=color:#ff79c6>this</span>.postcsom(requestBody).then((result) <span style=color:#ff79c6>=&gt;</span> {
+    <span style=color:#ff79c6>if</span> (result[<span style=color:#bd93f9>0</span>].ErrorInfo <span style=color:#ff79c6>!==</span> <span style=color:#ff79c6>null</span>) {
+      <span style=color:#ff79c6>throw</span> <span style=color:#ff79c6>new</span> <span style=color:#8be9fd;font-style:italic>Error</span>(JSON.stringify(result[<span style=color:#bd93f9>0</span>].ErrorInfo));
+    }
+    <span style=color:#ff79c6>return</span>;
+  });
+}
+
+
+<span style=color:#6272a4>/**
+</span><span style=color:#6272a4>  * xml encodes a string
+</span><span style=color:#6272a4>  * @param str
+</span><span style=color:#6272a4>  * @returns
+</span><span style=color:#6272a4>  */</span>
+<span style=color:#ff79c6>private</span> encodeXml(str: <span style=color:#8be9fd>string</span>)<span style=color:#ff79c6>:</span> <span style=color:#8be9fd>string</span> {
+  <span style=color:#ff79c6>const</span> xml_special_to_escaped_one_map <span style=color:#ff79c6>=</span> {
+    <span style=color:#f1fa8c>&#39;&amp;&#39;</span><span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;&amp;amp;&#39;</span>,
+    <span style=color:#f1fa8c>&#39;&#34;&#39;</span><span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;&amp;quot;&#39;</span>,
+    <span style=color:#f1fa8c>&#39;&lt;&#39;</span><span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;&amp;lt;&#39;</span>,
+    <span style=color:#f1fa8c>&#39;&gt;&#39;</span><span style=color:#ff79c6>:</span> <span style=color:#f1fa8c>&#39;&amp;gt;&#39;</span>
+  };
+
+  <span style=color:#ff79c6>return</span> str.replace(<span style=color:#f1fa8c>/([\&amp;&#34;&lt;&gt;])/g</span>, <span style=color:#8be9fd;font-style:italic>function</span> (str, item) {
+    <span style=color:#ff79c6>return</span> xml_special_to_escaped_one_map[item];
+  });
+}
+
+
+
+
+<span style=color:#6272a4>/**
+</span><span style=color:#6272a4>  * sends a request to client svc
+</span><span style=color:#6272a4>  * @param data request data
+</span><span style=color:#6272a4>  */</span>
+<span style=color:#ff79c6>private</span> <span style=color:#ff79c6>async</span> postcsom(data: <span style=color:#8be9fd>string</span>)<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>any</span>&gt; {
+  <span style=color:#ff79c6>const</span> clientServiceUrl <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>this</span>.absoluteWebUrl <span style=color:#ff79c6>+</span> <span style=color:#f1fa8c>&#39;/_vti_bin/client.svc/ProcessQuery&#39;</span>;
+
+  <span style=color:#ff79c6>const</span> formDigest <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> <span style=color:#ff79c6>this</span>.getFormDigest();
+
+  <span style=color:#ff79c6>const</span> requestHeaders: <span style=color:#8be9fd>Headers</span> <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> Headers();
+  requestHeaders.append(<span style=color:#f1fa8c>&#39;Accept&#39;</span>, <span style=color:#f1fa8c>&#39;application/json&#39;</span>);
+  requestHeaders.append(<span style=color:#f1fa8c>&#39;Content-Type&#39;</span>, <span style=color:#f1fa8c>&#39;text/xml&#39;</span>);
+  requestHeaders.append(<span style=color:#f1fa8c>&#39;X-RequestDigest&#39;</span>, formDigest);
+
+  <span style=color:#ff79c6>const</span> httpPostOptions: <span style=color:#8be9fd>IHttpClientOptions</span> <span style=color:#ff79c6>=</span> {
+    headers: <span style=color:#8be9fd>requestHeaders</span>,
+    body: <span style=color:#8be9fd>data</span>
+  };
+
+  <span style=color:#ff79c6>const</span> serviceResponse: <span style=color:#8be9fd>IResponse</span> <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> <span style=color:#ff79c6>this</span>.spHttpClient.post(clientServiceUrl, httpPostOptions);
+  <span style=color:#ff79c6>const</span> serviceJSONResponse <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> serviceResponse.json();
+  <span style=color:#ff79c6>if</span> (serviceResponse.ok) {
+    <span style=color:#ff79c6>return</span> serviceJSONResponse;
+  }
+  <span style=color:#ff79c6>return</span> <span style=color:#ff79c6>null</span>;
+}
+
+<span style=color:#6272a4>/**
+</span><span style=color:#6272a4>  * digest is needed for post requests
+</span><span style=color:#6272a4>  */</span>
+<span style=color:#ff79c6>private</span> <span style=color:#ff79c6>async</span> getFormDigest()<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>string</span>&gt; {
+  <span style=color:#ff79c6>const</span> contextInfoUrl <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>this</span>.absoluteWebUrl <span style=color:#ff79c6>+</span> <span style=color:#f1fa8c>&#39;/_api/contextinfo&#39;</span>;
+
+  <span style=color:#ff79c6>const</span> requestHeaders: <span style=color:#8be9fd>Headers</span> <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>new</span> Headers();
+  requestHeaders.append(<span style=color:#f1fa8c>&#39;Accept&#39;</span>, <span style=color:#f1fa8c>&#39;application/json&#39;</span>);
+  requestHeaders.append(<span style=color:#f1fa8c>&#39;Content-Type&#39;</span>, <span style=color:#f1fa8c>&#39;text/xml&#39;</span>);
+
+  <span style=color:#ff79c6>const</span> httpPostOptions: <span style=color:#8be9fd>IHttpClientOptions</span> <span style=color:#ff79c6>=</span> {
+    headers: <span style=color:#8be9fd>requestHeaders</span>
+  };
+  <span style=color:#ff79c6>const</span> contextInfoResponse: <span style=color:#8be9fd>IResponse</span> <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> <span style=color:#ff79c6>this</span>.spHttpClient.post(contextInfoUrl, httpPostOptions);
+  <span style=color:#ff79c6>const</span> contextInfoJsonResponse <span style=color:#ff79c6>=</span> <span style=color:#ff79c6>await</span> contextInfoResponse.json();
+  <span style=color:#ff79c6>const</span> formDigest: <span style=color:#8be9fd>string</span> <span style=color:#ff79c6>=</span> contextInfoJsonResponse.FormDigestValue;
+
+  <span style=color:#ff79c6>return</span> formDigest;
+}
+
+
+</code></pre></div><h2 id=update-defaultdisplayformurl>Update DefaultDisplayFormUrl</h2><p>Finally you can update your list form without errors.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ts data-lang=ts>
+<span style=color:#ff79c6>await</span> <span style=color:#ff79c6>this</span>.updateList(listTitle, {
+    DefaultDisplayFormUrl: <span style=color:#8be9fd>dispFormUrl</span>,
+    DefaultEditFormUrl: <span style=color:#8be9fd>editFormUrl</span>,
+    ContentTypesEnabled: <span style=color:#8be9fd>false</span>
+  });
+
+<span style=color:#6272a4>/**
+</span><span style=color:#6272a4>  * Updates List Properties
+</span><span style=color:#6272a4>  * @param listTitle
+</span><span style=color:#6272a4>  * @param properties of type IListInfo possible
+</span><span style=color:#6272a4>  */</span>
+<span style=color:#ff79c6>public</span> <span style=color:#ff79c6>async</span> updateList(listTitle: <span style=color:#8be9fd>string</span>, properties: <span style=color:#8be9fd>Record</span>&lt;<span style=color:#ff79c6>string</span>, <span style=color:#50fa7b>unknown</span>&gt;)<span style=color:#ff79c6>:</span> Promise&lt;<span style=color:#ff79c6>void</span>&gt; {
+  <span style=color:#ff79c6>await</span> sp.web.lists.getByTitle(listTitle).update(properties);
+} 
+
+</code></pre></div><p>By the way, you see also a easy method how to interact with jsom api, without having the complete api included.</p><div class=post-author><div class=author-img><img alt="Mathias Osterkamp" src=https://conception365.com/img/mathiasosterkamp_half.png class="avatar avatar-100 photo" height=100 width=100></div><div class=author-content><h5><a href=/top/about/ title="Written by Mathias Osterkamp" rel=author>Mathias Osterkamp</a></h5><p>I've been working for about 10 years with a thematic focus on 'Collaboration' and 'Digital Transformation' especially in the product environment Microsoft on the topics Office 365, SharePoint, Azure and general web development.</p></div></div><ul class=pager><li class=previous><a href=https://conception365.com/post/2021-05-19-spfx-2019-custominstaller/ data-toggle=tooltip data-placement=top title="SPFX 2019 Custom Installer">&larr;
+Previous Post<div class=pager-title>SPFX 2019 Custom Installer</div></a></li></ul><br><script src=https://utteranc.es/client.js repo=MathiasOsterkamp/conception365-com issue-term=url label=question theme=github-light crossorigin=anonymous issue-term=pathname async></script></div><div class="col-lg-4
+col-md-4
+sidebar-container"><h5>TOC</h5><nav id=TableOfContents><ul><li><a href=#problem>Problem</a></li><li><a href=#solution>Solution</a><ul><li><a href=#upload-your-editformaspx>Upload your editform.aspx</a></li><li><a href=#import-webparts>Import Webparts</a></li><li><a href=#update-defaultdisplayformurl>Update DefaultDisplayFormUrl</a></li></ul></li></ul></nav><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>FEATURED TAGS</a></h5><div class=tags><a href=/tags/managed-metadata title=managed-metadata>managed-metadata</a>
+<a href=/tags/pnp title=pnp>pnp</a>
+<a href=/tags/powerapps title=powerapps>powerapps</a>
+<a href=/tags/powershell title=powershell>powershell</a>
+<a href=/tags/sevdesk title=sevdesk>sevdesk</a>
+<a href=/tags/sp2019 title=sp2019>sp2019</a>
+<a href=/tags/spfx title=spfx>spfx</a></div></section><section><hr><h5>RECENT POSTS</h5><ul class=side-newsfeed><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-07-02-spfx-publish-classic-listforms/ title="Javascript - Publish classic list form webparts" style=display:inline-block;background-image:url(/post/2021-07-02-spfx-publish-classic-listforms/header_hu85d3c1c876d444d957e552a5fabdf1f3_1303364_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-07-02-spfx-publish-classic-listforms/ rel=bookmark title="Javascript - Publish classic list form webparts">Javascript - Publish classic list form webparts</a></h4><span class=side-item-meta><time class="entry-date published">Friday, July 2, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-05-19-spfx-2019-custominstaller/ title="SPFX 2019 Custom Installer" style=display:inline-block;background-image:url(/post/2021-05-19-spfx-2019-custominstaller/header_hu390b45efd5d960026afafcbbcc899e56_1405502_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-05-19-spfx-2019-custominstaller/ rel=bookmark title="SPFX 2019 Custom Installer">SPFX 2019 Custom Installer</a></h4><span class=side-item-meta><time class="entry-date published">Wednesday, May 19, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-05-19-spfx-2019-unexpected-token/ title="SPFX 2019 Unexpected token - Uglify" style=display:inline-block;background-image:url(/post/2021-05-19-spfx-2019-unexpected-token/header_hucdf18d2a14634d2c41e897791c096a72_1873661_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-05-19-spfx-2019-unexpected-token/ rel=bookmark title="SPFX 2019 Unexpected token - Uglify">SPFX 2019 Unexpected token - Uglify</a></h4><span class=side-item-meta><time class="entry-date published">Wednesday, May 19, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-05-06-import-export-userprofilelinks/ rel=bookmark title="Migrate User Profile My Links">Migrate User Profile My Links</a></h4><span class=side-item-meta><time class="entry-date published">Thursday, May 6, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-05-02-powerapps-sevdesk-technic/ title="PowerApps TimeTracking for SevDesk Part 2" style=display:inline-block;background-image:url(/post/2021-05-02-powerapps-sevdesk-technic/header_hu27e9a052c95f34422c9e762dee448c0f_186887_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-05-02-powerapps-sevdesk-technic/ rel=bookmark title="PowerApps TimeTracking for SevDesk Part 2">PowerApps TimeTracking for SevDesk Part 2</a></h4><span class=side-item-meta><time class="entry-date published">Sunday, May 2, 2021</time></span></div></div></li></ul></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href rel=alternate type=application/rss+xml title="Mathias Osterkamp"><span class=fa-stack><i class="fas fa-rss"></i></span>
+RSS</a></li><li><a href=mailto:mathias.osterkamp@conception365.com><span class=fa-stack><i class="fas fa-envelope"></i></span>
+Email</a></li><li><a href=/top/impressum/><span>Impressum</span></a></li><li><a href=/top/privacy/><span>Privacy Policy</span></a></li></ul><p class="copyright text-muted">Copyright &copy; Mathias Osterkamp 2021</p></div></div></div></footer></body></html>
