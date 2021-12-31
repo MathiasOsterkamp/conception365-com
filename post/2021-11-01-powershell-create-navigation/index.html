@@ -1,0 +1,362 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><meta property="og:site_name" content="Mathias Osterkamp"><meta property="og:type" content="article"><meta property="og:image" content="/post/2021-11-01-powershell-create-navigation/header_hu57fad8182e36ba611e1f4a15b5e0c725_73932_350x0_resize_box_2.png"><meta property="twitter:image" content="/post/2021-11-01-powershell-create-navigation/header_hu57fad8182e36ba611e1f4a15b5e0c725_73932_350x0_resize_box_2.png"><meta name=title content="Powershell - Create Navigation"><meta property="og:title" content="Powershell - Create Navigation"><meta property="twitter:title" content="Powershell - Create Navigation"><meta name=description content><meta property="og:description" content><meta property="twitter:description" content><meta property="twitter:card" content="summary"><meta name=keyword content="SharePoint, Microsoft, Office 365, Teams, Azure, Webdevelopment"><link rel="shortcut icon" href=/%20img/favicon.ico><title>Powershell - Create Navigation-Mathias Osterkamp</title><link rel=canonical href=/post/2021-11-01-powershell-create-navigation/><link rel=preload href=fonts/jost/files/jost-latin-200-normal.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=fonts/jost/files/jost-latin-400-normal.woff2 as=font type=font/woff2 crossorigin><link rel=preload href=fonts/jost/files/jost-latin-500-normal.woff2 as=font type=font/woff2 crossorigin><link rel=stylesheet href=https://conception365.com/main.min.50bc48d2b178bdf1d99650adf9577e5e15189f3c08648f97cf6e84b934bf36bc.css><script type=text/javascript src=/js/bundle.min.e459528320f58ffacd1d26c997631f04a7c3d2ff4f6408fe8e3bc5b970f96fae.js defer></script><script async src="https://www.googletagmanager.com/gtag/js?id=G-JG6K5XRGQL"></script><script>var dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-JG6K5XRGQL',{anonymize_ip:!0})}</script><script async src=http://localhost:3000/tracker.js data-ackee-server=http://localhost:3000 data-ackee-opts='{ "ignoreLocalhost": false,"ignoreOwnVisits": false, "detailed": true }' data-ackee-domain-id=8d8a9a93-b756-432f-b199-8df069f35faf></script></head><header class=intro-header><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class=site-heading><a href=https://conception365.com><h1>Mathias Osterkamp</h1></a><span class=subheading>Specialist – focus development Microsoft technology stack</span></div></div></div></div></header><nav class="navbar navbar-default navbar-custom"><div class=container><div class="navbar-header page-scroll"><button type=button class=navbar-toggle>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span><span class=icon-bar></span><span class=icon-bar></span></button></div><div id=huxblog_navbar><div class=navbar-collapse><ul class="nav navbar-nav"><li><a href=/>Home</a></li><li><a href=/categories/administration>administration</a></li><li><a href=/categories/powerapps>powerapps</a></li><li><a href=/categories/spfx>spfx</a></li><li><a href=/top/about/>ABOUT ME</a></li></ul><ul class="nav navbar-nav navbar-right"><li><a href=/search>SEARCH <img src=/img/search.png height=15 style=cursor:pointer alt=Search></a></li></ul></div></div></div></nav><script>var $body=document.body,$toggle=document.querySelector('.navbar-toggle'),$navbar=document.querySelector('#huxblog_navbar'),$collapse=document.querySelector('.navbar-collapse');$toggle.addEventListener('click',handleMagic);function handleMagic(a){$navbar.className.indexOf('in')>0?($navbar.className=" ",setTimeout(function(){$navbar.className.indexOf('in')<0&&($collapse.style.height="0px")},400)):($collapse.style.height="auto",$navbar.className+=" in")}</script><article><div class=container><div class=row><div class="col-lg-8
+col-md-8
+post-container"><div class=post-preview><div class=penci-standard-cat><span class=cat><a class=penci-cat-name href=https://conception365.com/tags/sharepoint/ rel="category tag">SharePoint</a>
+<a class=penci-cat-name href=https://conception365.com/tags/powershell/ rel="category tag">Powershell</a></span></div><a href=https://conception365.com/post/2021-11-01-powershell-create-navigation/><h2 class=post-title>Powershell - Create Navigation</h2></a><h2 class=post-subtitle>Create managed metadata navigation from Powershell CSOM</h2><span class=post-meta>Written by
+Mathias Osterkamp
+on
+Monday, November 1, 2021</span>
+<a href=header.png target=_blank><img src=/post/2021-11-01-powershell-create-navigation/header.png></a></div><h1 id=managed-navigation-with-powershell>Managed Navigation with Powershell</h1><h2 id=goal>Goal</h2><p>Our goal is a complete setup for a test site collection with managed metadata navigation and existing pages with different levels. The challenge is the correct configuration for the site with powershell and also create the correct terms. With the script you can set the amount of navigation entries.</p><h2 id=preparation>Preparation</h2><p>We use SharePoint PnP Powershell Package to get help with some tasks.</p><ul><li><a href=https://www.powershellgallery.com/packages/SharePointPnPPowerShell2019/3.29.2101.0>PnP Powershell 2019 Download</a></li><li>CSOM dlls &ldquo;Microsoft.SharePoint.Client.dll&rdquo;
+&ldquo;Microsoft.SharePoint.Client.Runtime.dll&rdquo;
+&ldquo;Microsoft.SharePoint.Client.Taxonomy.dll&rdquo;
+&ldquo;Microsoft.SharePoint.Client.Publishing.dll&rdquo; from &ldquo;\Program Files\Common Files\Microsoft Shared\Web Server Extensions\15\isapi\&rdquo; , more <a href=https://docs.microsoft.com/de-de/sharepoint/dev/general-development/get-started-using-the-client-object-model-with-external-data-in-sharepoint>details here</a></li><li>Create a classic team site collection</li></ul><h2 id=key-points>Key Points</h2><p>The Invoke-SetupFeatures enables needed features for publishing, what is the requirement.</p><p>The Invoke-SetupTermSet creates your termset and Invoke-SetupNavigation enables navigation features. We also use Invoke-EnableTagging to allow tagging, that means we also override the default permission behaviour. (Metadata navigation is not visible to users with read permissions) <a href=https://sharepoint.handsontek.net/2016/05/12/metadata-navigation-is-not-visible-to-users-with-read-permissions/>more information</a>.</p><p>Furthermore we collect the page layout item Get-PageLayoutItem and create our terms Invoke-CreateTerms. For each term we create also first a new site page Add-PublishingPageWithContent and connect this page with the new created term.</p><p>The Invoke-UpdateTaxonomyCache checks changes for taxonomy and avoids save conflicts.</p><h2 id=content-not-crawled-by-search>Content not crawled by search</h2><p>We also had some issues to crawl a big amount (over 3000) of friendly pages from search. That means you can create the pages, but the search index does not collect it any more - at least the friendly url version.</p><p>The official limit for &ldquo;Number of terms in managed navigation term set&rdquo; from <a href=https://docs.microsoft.com/en-us/sharepoint/install/software-boundaries-limits-2019>Microsoft</a> is at 2000.</p><p>After some research, on a full crawl for example the complete termset is crawled with all pages. That leads to a timeout. You can override this in search central administration <a href=https://docs.microsoft.com/en-us/sharepoint/search/configure-time-out-values-for-crawler-connections>here</a>. We had to set it to a high value, the crawl tooks over 12 minutes - so that is maybe in some cases no optimal solution.</p><h2 id=complete-script>Complete Script</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ps1 data-lang=ps1><span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#6272a4># Configuration</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#8be9fd;font-style:italic>$siteurl</span> = <span style=color:#f1fa8c>&#34;https://contoso.com/sites/sitecollection1&#34;</span>
+<span style=color:#8be9fd;font-style:italic>$termSetName</span> = <span style=color:#f1fa8c>&#34;GlobalNav&#34;</span>
+
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#6272a4># Functions</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>Invoke-CreateTerms</span>(<span style=color:#8be9fd;font-style:italic>$context</span>, <span style=color:#8be9fd;font-style:italic>$PublishingWeb</span>, <span style=color:#8be9fd;font-style:italic>$PageLayoutItem</span>, <span style=color:#8be9fd;font-style:italic>$termStore</span>, <span style=color:#8be9fd;font-style:italic>$termObject</span>, <span style=color:#8be9fd;font-style:italic>$path</span>, <span style=color:#8be9fd;font-style:italic>$level</span>, <span style=color:#8be9fd;font-style:italic>$maxlevel</span>, <span style=color:#8be9fd;font-style:italic>$maxItemsPerLevel</span>, <span style=color:#8be9fd;font-style:italic>$overallMax</span>) {
+
+    <span style=color:#8be9fd;font-style:italic>$max</span> = <span style=color:#8be9fd;font-style:italic>$maxItemsPerLevel</span>
+    <span style=color:#8be9fd;font-style:italic>$level</span> = <span style=color:#8be9fd;font-style:italic>$level</span> + 1
+ 
+    <span style=color:#ff79c6>for</span> (<span style=color:#8be9fd;font-style:italic>$i</span> = 1; <span style=color:#8be9fd;font-style:italic>$i</span> <span style=color:#ff79c6>-lt</span> <span style=color:#8be9fd;font-style:italic>$max</span> + 1; <span style=color:#8be9fd;font-style:italic>$i</span>++) {
+        <span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>$global:countTerms</span> <span style=color:#ff79c6>-lt</span> <span style=color:#8be9fd;font-style:italic>$overallMax</span>) {
+            <span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>$path</span> <span style=color:#ff79c6>-eq</span> <span style=color:#f1fa8c>&#34;&#34;</span>) {
+                <span style=color:#8be9fd;font-style:italic>$newPath</span> = <span style=color:#f1fa8c>&#34;$i&#34;</span>
+            }
+            <span style=color:#ff79c6>else</span> {
+                <span style=color:#8be9fd;font-style:italic>$newPath</span> = <span style=color:#f1fa8c>&#34;</span>$(<span style=color:#8be9fd;font-style:italic>$path</span>)<span style=color:#f1fa8c>_</span>$(<span style=color:#8be9fd;font-style:italic>$i</span>)<span style=color:#f1fa8c>&#34;</span>
+            }
+       
+            <span style=color:#8be9fd;font-style:italic>$termName</span> = <span style=color:#f1fa8c>&#34;Term$newPath&#34;</span>
+
+            <span style=color:#8be9fd;font-style:italic>$newpage</span> = <span style=color:#8be9fd;font-style:italic>Add-PublishingPageWithContent</span> <span style=color:#8be9fd;font-style:italic>$context</span> <span style=color:#8be9fd;font-style:italic>$PublishingWeb</span> <span style=color:#8be9fd;font-style:italic>$PageLayoutItem</span> <span style=color:#f1fa8c>&#34;</span>$(<span style=color:#8be9fd;font-style:italic>$termName</span>)<span style=color:#f1fa8c>.aspx&#34;</span> <span style=color:#8be9fd;font-style:italic>$termName</span> <span style=color:#8be9fd;font-style:italic>$termName</span>
+            <span style=color:#8be9fd;font-style:italic>$url</span> = <span style=color:#8be9fd;font-style:italic>$newpage</span>[<span style=color:#f1fa8c>&#34;FileRef&#34;</span>]
+            <span style=color:#8be9fd;font-style:italic>$global:countTerms</span>++
+            <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Create term </span>$(<span style=color:#8be9fd;font-style:italic>$termName</span>)<span style=color:#f1fa8c> - </span>$(<span style=color:#8be9fd;font-style:italic>$global:countTerms</span>)<span style=color:#f1fa8c>/$overallMax...&#34;</span> <span style=color:#ff79c6>-f</span> Yellow -NoNewline
+            <span style=color:#8be9fd;font-style:italic>$newTerm</span> = <span style=color:#8be9fd;font-style:italic>$termObject</span>.CreateTerm(<span style=color:#8be9fd;font-style:italic>$termName</span>, 1033, [System.Guid]::NewGuid().toString())
+            <span style=color:#8be9fd;font-style:italic>$newTerm</span>.SetLocalCustomProperty(<span style=color:#f1fa8c>&#39;_Sys_Nav_TargetUrl&#39;</span>, <span style=color:#8be9fd;font-style:italic>$url</span>)
+            <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Done&#34;</span> <span style=color:#ff79c6>-f</span> Green
+        
+            <span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>$level</span> <span style=color:#ff79c6>-lt</span> <span style=color:#8be9fd;font-style:italic>$maxlevel</span> ) {       
+                <span style=color:#8be9fd;font-style:italic>Invoke-CreateTerms</span> <span style=color:#8be9fd;font-style:italic>$context</span> <span style=color:#8be9fd;font-style:italic>$PublishingWeb</span> <span style=color:#8be9fd;font-style:italic>$PageLayoutItem</span> <span style=color:#8be9fd;font-style:italic>$termStore</span> <span style=color:#8be9fd;font-style:italic>$newTerm</span> <span style=color:#8be9fd;font-style:italic>$newPath</span> <span style=color:#8be9fd;font-style:italic>$level</span> <span style=color:#8be9fd;font-style:italic>$maxlevel</span> <span style=color:#8be9fd;font-style:italic>$maxItemsPerLevel</span> <span style=color:#8be9fd;font-style:italic>$overallMax</span> 
+            }
+        }
+    }
+    <span style=color:#8be9fd;font-style:italic>$termStore</span>.CommitAll()
+    <span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
+
+}
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>Get-PageLayoutItem</span>(<span style=color:#8be9fd;font-style:italic>$PageLayoutName</span>) {
+    <span style=color:#8be9fd;font-style:italic>$Ctx</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPContext</span>
+    <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Yellow <span style=color:#f1fa8c>&#34;Getting Page Layout...&#34;</span> -NoNewline
+    <span style=color:#6272a4>#Get the Page Layout</span>
+    <span style=color:#8be9fd;font-style:italic>$RootWeb</span> = <span style=color:#8be9fd;font-style:italic>$Ctx</span>.Site.RootWeb
+    <span style=color:#8be9fd;font-style:italic>$MasterPageList</span> = <span style=color:#8be9fd;font-style:italic>$RootWeb</span>.Lists.GetByTitle(<span style=color:#f1fa8c>&#39;Master Page Gallery&#39;</span>)
+    <span style=color:#8be9fd;font-style:italic>$CAMLQuery</span> = <span style=color:#8be9fd;font-style:italic>New-Object</span> Microsoft.SharePoint.Client.CamlQuery
+    <span style=color:#8be9fd;font-style:italic>$CAMLQuery</span>.ViewXml = <span style=color:#f1fa8c>&#34;&lt;View&gt;&lt;Query&gt;&lt;Where&gt;&lt;Eq&gt;&lt;FieldRef Name=&#39;FileLeafRef&#39; /&gt;&lt;Value Type=&#39;Text&#39;&gt;$PageLayoutName&lt;/Value&gt;&lt;/Eq&gt;&lt;/Where&gt;&lt;/Query&gt;&lt;/View&gt;&#34;</span>
+    <span style=color:#8be9fd;font-style:italic>$PageLayouts</span> = <span style=color:#8be9fd;font-style:italic>$MasterPageList</span>.GetItems(<span style=color:#8be9fd;font-style:italic>$CAMLQuery</span>)
+    <span style=color:#8be9fd;font-style:italic>$Ctx</span>.Load(<span style=color:#8be9fd;font-style:italic>$PageLayouts</span>)
+    <span style=color:#8be9fd;font-style:italic>$Ctx</span>.ExecuteQuery()
+
+    <span style=color:#8be9fd;font-style:italic>$PageLayoutItem</span> = <span style=color:#8be9fd;font-style:italic>$PageLayouts</span>[0]
+    <span style=color:#8be9fd;font-style:italic>$Ctx</span>.Load(<span style=color:#8be9fd;font-style:italic>$PageLayoutItem</span>)
+    <span style=color:#8be9fd;font-style:italic>$Ctx</span>.ExecuteQuery()
+    <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Green <span style=color:#f1fa8c>&#34;Done&#34;</span>
+    <span style=color:#ff79c6>return</span> <span style=color:#8be9fd;font-style:italic>$PageLayoutItem</span>
+}
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>Add-PublishingPageWithContent</span>(<span style=color:#8be9fd;font-style:italic>$Ctx</span>, <span style=color:#8be9fd;font-style:italic>$PublishingWeb</span> , <span style=color:#8be9fd;font-style:italic>$PageLayoutItem</span> , <span style=color:#8be9fd;font-style:italic>$PageName</span>, <span style=color:#8be9fd;font-style:italic>$PageTitle</span>, <span style=color:#8be9fd;font-style:italic>$PageContent</span>) {
+   
+
+    <span style=color:#6272a4>#Create Publishing page</span>
+    <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Yellow <span style=color:#f1fa8c>&#34;Creating New Page $PageName ...&#34;</span> -NoNewline
+    <span style=color:#8be9fd;font-style:italic>$PageInfo</span> = <span style=color:#8be9fd;font-style:italic>New-Object</span> Microsoft.SharePoint.Client.Publishing.PublishingPageInformation 
+    <span style=color:#8be9fd;font-style:italic>$PageInfo</span>.Name = <span style=color:#8be9fd;font-style:italic>$PageName</span>
+    <span style=color:#8be9fd;font-style:italic>$PageInfo</span>.PageLayoutListItem = <span style=color:#8be9fd;font-style:italic>$PageLayoutItem</span>
+    <span style=color:#8be9fd;font-style:italic>$Page</span> = <span style=color:#8be9fd;font-style:italic>$PublishingWeb</span>.AddPublishingPage(<span style=color:#8be9fd;font-style:italic>$PageInfo</span>) 
+    <span style=color:#8be9fd;font-style:italic>$Ctx</span>.ExecuteQuery()
+
+    <span style=color:#8be9fd;font-style:italic>$ListItem</span> = <span style=color:#8be9fd;font-style:italic>$Page</span>.ListItem
+    <span style=color:#8be9fd;font-style:italic>$Ctx</span>.Load(<span style=color:#8be9fd;font-style:italic>$ListItem</span>)
+    <span style=color:#8be9fd;font-style:italic>$Ctx</span>.ExecuteQuery()
+ 
+    <span style=color:#6272a4>#Update Page Contents</span>
+    <span style=color:#8be9fd;font-style:italic>$ListItem</span>[<span style=color:#f1fa8c>&#34;Title&#34;</span>] = <span style=color:#8be9fd;font-style:italic>$PageTitle</span>
+    <span style=color:#8be9fd;font-style:italic>$ListItem</span>[<span style=color:#f1fa8c>&#34;PublishingPageContent&#34;</span>] = <span style=color:#8be9fd;font-style:italic>$PageContent</span>
+    <span style=color:#8be9fd;font-style:italic>$ListItem</span>.Update()
+    <span style=color:#8be9fd;font-style:italic>$Ctx</span>.ExecuteQuery()
+
+ 
+    <span style=color:#6272a4>#Publish the page</span>
+
+    <span style=color:#8be9fd;font-style:italic>$ListItem</span>.File.CheckIn([string]::Empty, [Microsoft.SharePoint.Client.CheckinType]::MajorCheckIn)
+    <span style=color:#8be9fd;font-style:italic>$ListItem</span>.File.Publish([string]::Empty)
+    <span style=color:#8be9fd;font-style:italic>$Ctx</span>.ExecuteQuery()
+    <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Green <span style=color:#f1fa8c>&#34;Done&#34;</span>
+
+
+    <span style=color:#ff79c6>return</span> <span style=color:#8be9fd;font-style:italic>$ListItem</span>
+}
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>Invoke-SetupFeatures</span>() {
+
+    <span style=color:#6272a4>#publihsing Infrastructure site feature check</span>
+    <span style=color:#8be9fd;font-style:italic>$FeaturePublishingInfraSiteId</span> = <span style=color:#f1fa8c>&#34;f6924d36-2fa8-4f0b-b16d-06b7250180fa&#34;</span> <span style=color:#6272a4>#Site Scoped Publishing Feature</span>
+    <span style=color:#8be9fd;font-style:italic>$Feature</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPFeature</span> -Scope Site -Identity <span style=color:#8be9fd;font-style:italic>$FeaturePublishingInfraSiteId</span>
+    <span style=color:#ff79c6>If</span> (<span style=color:#8be9fd;font-style:italic>$null</span> <span style=color:#ff79c6>-eq</span> <span style=color:#8be9fd;font-style:italic>$Feature</span>.DefinitionId) {    
+        <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Yellow <span style=color:#f1fa8c>&#34;Activating Publishing Infrastructure Site Feature...&#34;</span> -NoNewline
+        <span style=color:#8be9fd;font-style:italic>Enable-PnPFeature</span> -Scope Site -Identity <span style=color:#8be9fd;font-style:italic>$FeaturePublishingInfraSiteId</span> -Force
+        <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Green <span style=color:#f1fa8c>&#34;Done&#34;</span>
+    }
+    <span style=color:#ff79c6>Else</span> {
+        <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Yellow <span style=color:#f1fa8c>&#34;Publishing Infrastructure Site Feature already activated...&#34;</span> -NoNewline
+        <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Green <span style=color:#f1fa8c>&#34;Done&#34;</span>
+    }
+
+    <span style=color:#6272a4>#publishing Infrastructure web feature check</span>
+    <span style=color:#8be9fd;font-style:italic>$FeaturePublishingInfraWebId</span> = <span style=color:#f1fa8c>&#34;94c94ca6-b32f-4da9-a9e3-1f3d343d7ecb&#34;</span> 
+    <span style=color:#8be9fd;font-style:italic>$Feature</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPFeature</span> -Scope Web -Identity <span style=color:#8be9fd;font-style:italic>$FeaturePublishingInfraWebId</span>
+    <span style=color:#ff79c6>If</span> (<span style=color:#8be9fd;font-style:italic>$null</span> <span style=color:#ff79c6>-eq</span> <span style=color:#8be9fd;font-style:italic>$Feature</span>.DefinitionId) {    
+        <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Yellow <span style=color:#f1fa8c>&#34;Activating Publishing Infrastructure Web Feature...&#34;</span>
+        <span style=color:#8be9fd;font-style:italic>Enable-PnPFeature</span> -Scope Web -Identity <span style=color:#8be9fd;font-style:italic>$FeaturePublishingInfraWebId</span> -Force
+        <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Green <span style=color:#f1fa8c>&#34;Done&#34;</span>
+    }
+    <span style=color:#ff79c6>Else</span> {
+        <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Yellow <span style=color:#f1fa8c>&#34;Publishing Infrastructure Web Feature already activated...&#34;</span> -NoNewline
+        <span style=color:#8be9fd;font-style:italic>Write-host</span> <span style=color:#ff79c6>-f</span> Green <span style=color:#f1fa8c>&#34;Done&#34;</span>
+    }
+
+    <span style=color:#6272a4>#Wait complete all</span>
+    <span style=color:#8be9fd;font-style:italic>Start-Sleep</span> -Seconds 10
+}
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>Invoke-SetupTermSet</span>(<span style=color:#8be9fd;font-style:italic>$termSetName</span>) {
+
+    <span style=color:#8be9fd;font-style:italic>$context</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPContext</span>
+    <span style=color:#8be9fd;font-style:italic>$CurrentSite</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPSite</span>
+    <span style=color:#8be9fd;font-style:italic>$taxonomySession</span> = [Microsoft.SharePoint.Client.Taxonomy.TaxonomySession]::GetTaxonomySession(<span style=color:#8be9fd;font-style:italic>$context</span>)
+    <span style=color:#8be9fd;font-style:italic>$TermStore</span> = <span style=color:#8be9fd;font-style:italic>$taxonomySession</span>.GetDefaultSiteCollectionTermStore();
+    <span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span> = <span style=color:#8be9fd;font-style:italic>$TermStore</span>.GetSiteCollectionGroup(<span style=color:#8be9fd;font-style:italic>$CurrentSite</span>, <span style=color:#8be9fd;font-style:italic>$false</span>)
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$taxonomySession</span>)
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span>)
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$TermStore</span>)
+    <span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
+    <span style=color:#8be9fd;font-style:italic>$termgroupname</span> = <span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span>.Name
+    
+    <span style=color:#8be9fd;font-style:italic>$termSets</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPTermSet</span>  -TermGroup <span style=color:#8be9fd;font-style:italic>$termgroupname</span>
+    <span style=color:#8be9fd;font-style:italic>$exists</span> = (<span style=color:#8be9fd;font-style:italic>$termSets</span> | <span style=color:#8be9fd;font-style:italic>Where-Object</span> { <span style=color:#8be9fd;font-style:italic>$_</span>.Name <span style=color:#ff79c6>-eq</span> <span style=color:#8be9fd;font-style:italic>$termSetName</span> } | <span style=color:#8be9fd;font-style:italic>Measure-Object</span>).Count <span style=color:#ff79c6>-gt</span> 0
+    <span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>$exists</span> <span style=color:#ff79c6>-eq</span> <span style=color:#8be9fd;font-style:italic>$false</span> ) {
+        <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Created termset $termSetName ...&#34;</span> <span style=color:#ff79c6>-f</span> Yellow  -NoNewline
+        <span style=color:#8be9fd;font-style:italic>$termSet</span> = <span style=color:#8be9fd;font-style:italic>New-PnPTermSet</span> -Name <span style=color:#8be9fd;font-style:italic>$termSetName</span> -TermGroup <span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span> -Lcid 1033  -IsOpenForTermCreation
+        <span style=color:#8be9fd;font-style:italic>$TermStore</span>.CommitAll()
+        <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Done&#34;</span> <span style=color:#ff79c6>-f</span> Green  
+    }
+    <span style=color:#ff79c6>else</span> {
+        
+        <span style=color:#8be9fd;font-style:italic>Start-Sleep</span> -Seconds 5
+        <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Termset already exists </span>$(<span style=color:#8be9fd;font-style:italic>$termSet</span>.Name)<span style=color:#f1fa8c>&#34;</span> <span style=color:#ff79c6>-f</span> Yellow  -NoNewline
+        <span style=color:#8be9fd;font-style:italic>$termSet</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPTermSet</span> -Identity <span style=color:#8be9fd;font-style:italic>$termSetName</span> -TermGroup <span style=color:#8be9fd;font-style:italic>$termgroupname</span> 
+        <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Done&#34;</span> <span style=color:#ff79c6>-f</span> Green
+    }
+
+}
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>Invoke-SetupNavigation</span>(<span style=color:#8be9fd;font-style:italic>$termSetName</span>) {
+
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Reset Navigation...&#34;</span> <span style=color:#ff79c6>-f</span> Yellow -NoNewline
+    <span style=color:#8be9fd;font-style:italic>$context</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPContext</span>
+    <span style=color:#8be9fd;font-style:italic>$CurrentSite</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPSite</span>
+    <span style=color:#8be9fd;font-style:italic>$taxonomySession</span> = [Microsoft.SharePoint.Client.Taxonomy.TaxonomySession]::GetTaxonomySession(<span style=color:#8be9fd;font-style:italic>$context</span>)
+
+    <span style=color:#8be9fd;font-style:italic>$TermStore</span> = <span style=color:#8be9fd;font-style:italic>$taxonomySession</span>.GetDefaultSiteCollectionTermStore();
+    <span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span> = <span style=color:#8be9fd;font-style:italic>$TermStore</span>.GetSiteCollectionGroup(<span style=color:#8be9fd;font-style:italic>$CurrentSite</span>, <span style=color:#8be9fd;font-style:italic>$false</span>)
+    <span style=color:#8be9fd;font-style:italic>$termsets</span> = <span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span>.TermSets
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$taxonomySession</span>)
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span>)
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$termsets</span>)
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$TermStore</span>)
+    <span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
+
+    <span style=color:#8be9fd;font-style:italic>$navigationTermSet</span> = <span style=color:#8be9fd;font-style:italic>$termsets</span> | <span style=color:#8be9fd;font-style:italic>Where-Object</span> { <span style=color:#8be9fd;font-style:italic>$_</span>.Name <span style=color:#ff79c6>-eq</span> <span style=color:#8be9fd;font-style:italic>$termSetName</span> } 
+
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$navigationTermSet</span>)
+    <span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Done&#34;</span> <span style=color:#ff79c6>-f</span> Green
+
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Set taxonomy navigation...&#34;</span> <span style=color:#ff79c6>-f</span> Yellow -NoNewline
+    <span style=color:#8be9fd;font-style:italic>$context</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPContext</span>
+    <span style=color:#8be9fd;font-style:italic>$Web</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPWeb</span>
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span> = <span style=color:#8be9fd;font-style:italic>New-Object</span> Microsoft.SharePoint.Client.Publishing.Navigation.WebNavigationSettings <span style=color:#8be9fd;font-style:italic>$context</span>, <span style=color:#8be9fd;font-style:italic>$Web</span>
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span>.ResetToDefaults()
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span>.GlobalNavigation.Source = 1
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span>.CurrentNavigation.Source = 1
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span>.Update(<span style=color:#8be9fd;font-style:italic>$taxonomySession</span>)
+    <span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
+    <span style=color:#8be9fd;font-style:italic>Start-Sleep</span> -Seconds 2
+
+  
+    <span style=color:#8be9fd;font-style:italic>$context</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPContext</span>
+    <span style=color:#8be9fd;font-style:italic>$Web</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPWeb</span>
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span> = <span style=color:#8be9fd;font-style:italic>New-Object</span> Microsoft.SharePoint.Client.Publishing.Navigation.WebNavigationSettings <span style=color:#8be9fd;font-style:italic>$context</span>, <span style=color:#8be9fd;font-style:italic>$Web</span>
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span>.CurrentNavigation.Source = <span style=color:#f1fa8c>&#34;taxonomyProvider&#34;</span>
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span>.CurrentNavigation.TermStoreId = <span style=color:#8be9fd;font-style:italic>$TermStore</span>.Id
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span>.CurrentNavigation.TermSetId = <span style=color:#8be9fd;font-style:italic>$navigationTermSet</span>.Id
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span>.GlobalNavigation.Source = <span style=color:#f1fa8c>&#34;taxonomyProvider&#34;</span>
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span>.GlobalNavigation.TermStoreId = <span style=color:#8be9fd;font-style:italic>$TermStore</span>.Id
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span>.GlobalNavigation.TermSetId = <span style=color:#8be9fd;font-style:italic>$navigationTermSet</span>.Id
+    <span style=color:#8be9fd;font-style:italic>$navigationSettings</span>.Update(<span style=color:#8be9fd;font-style:italic>$taxonomySession</span>)
+
+    <span style=color:#8be9fd;font-style:italic>$Web</span>.AllProperties[<span style=color:#f1fa8c>&#34;__IncludeSubSitesInNavigation&#34;</span>] = <span style=color:#8be9fd;font-style:italic>$True</span>
+    <span style=color:#6272a4>#Show pages in global navigation</span>
+    <span style=color:#8be9fd;font-style:italic>$Web</span>.AllProperties[<span style=color:#f1fa8c>&#34;__IncludePagesInNavigation&#34;</span>] = <span style=color:#8be9fd;font-style:italic>$False</span>
+ 
+    <span style=color:#6272a4>#Update Settings</span>
+    <span style=color:#8be9fd;font-style:italic>$Web</span>.Update()
+    <span style=color:#8be9fd;font-style:italic>$TermStore</span>.CommitAll()
+    <span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
+
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Done&#34;</span> <span style=color:#ff79c6>-f</span> Green
+  
+}
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>Invoke-UpdateTaxonomyCache</span>() {
+    <span style=color:#8be9fd;font-style:italic>$context</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPContext</span>
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Update taxonomy cache...&#34;</span> <span style=color:#ff79c6>-f</span> Yellow -NoNewline
+    <span style=color:#8be9fd;font-style:italic>$TaxonomySession</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPTaxonomySession</span>
+    <span style=color:#8be9fd;font-style:italic>$TaxonomySession</span>.UpdateCache()
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$TaxonomySession</span>)
+    <span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Done&#34;</span> <span style=color:#ff79c6>-f</span> Green
+}
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>Invoke-EnableTagging</span>(<span style=color:#8be9fd;font-style:italic>$termSetName</span>) {
+
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Enable tagging for termset...&#34;</span> <span style=color:#ff79c6>-f</span> Yellow -NoNewline
+    <span style=color:#8be9fd;font-style:italic>Start-Sleep</span> -Seconds 5
+    <span style=color:#8be9fd;font-style:italic>$context</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPContext</span>
+    <span style=color:#8be9fd;font-style:italic>$CurrentSite</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPSite</span>
+    <span style=color:#8be9fd;font-style:italic>$taxonomySession</span> = [Microsoft.SharePoint.Client.Taxonomy.TaxonomySession]::GetTaxonomySession(<span style=color:#8be9fd;font-style:italic>$context</span>)
+    <span style=color:#8be9fd;font-style:italic>$TermStore</span> = <span style=color:#8be9fd;font-style:italic>$taxonomySession</span>.GetDefaultSiteCollectionTermStore();
+    <span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span> = <span style=color:#8be9fd;font-style:italic>$TermStore</span>.GetSiteCollectionGroup(<span style=color:#8be9fd;font-style:italic>$CurrentSite</span>, <span style=color:#8be9fd;font-style:italic>$false</span>)
+    <span style=color:#8be9fd;font-style:italic>$termsets</span> = <span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span>.TermSets
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$taxonomySession</span>)
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span>)
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$termsets</span>)
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$TermStore</span>)
+    <span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
+    
+    <span style=color:#8be9fd;font-style:italic>$navigationTermSet</span> = <span style=color:#8be9fd;font-style:italic>$termsets</span> | <span style=color:#8be9fd;font-style:italic>Where-Object</span> { <span style=color:#8be9fd;font-style:italic>$_</span>.Name <span style=color:#ff79c6>-eq</span> <span style=color:#8be9fd;font-style:italic>$termSetName</span> } 
+    
+    <span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$navigationTermSet</span>)
+    <span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
+    
+    <span style=color:#8be9fd;font-style:italic>$navigationTermSet</span>.IsOpenForTermCreation = <span style=color:#8be9fd;font-style:italic>$true</span>
+    <span style=color:#8be9fd;font-style:italic>$navigationTermSet</span>.IsAvailableForTagging = <span style=color:#8be9fd;font-style:italic>$true</span>
+    <span style=color:#8be9fd;font-style:italic>$TermStore</span>.CommitAll()
+    
+    <span style=color:#8be9fd;font-style:italic>Start-Sleep</span> -Seconds 2
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Done&#34;</span> <span style=color:#ff79c6>-f</span> Green
+}
+
+<span style=color:#ff79c6>function</span> <span style=color:#8be9fd;font-style:italic>Invoke-LoadPnp</span>() {
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Load Libraries...&#34;</span> <span style=color:#ff79c6>-f</span> Yellow -NoNewline
+
+    <span style=color:#8be9fd;font-style:italic>$rootpath</span> = <span style=color:#8be9fd;font-style:italic>$PSScriptRoot</span>
+    <span style=color:#8be9fd;font-style:italic>$path</span> = <span style=color:#8be9fd;font-style:italic>Join-Path</span> -Path <span style=color:#8be9fd;font-style:italic>$rootpath</span> -ChildPath <span style=color:#f1fa8c>&#34;SharePointPnPPowerShell2019\3.29.2101.0\&#34;</span>
+    <span style=color:#8be9fd;font-style:italic>$sharepointPowershellModulePath</span> = <span style=color:#8be9fd;font-style:italic>Join-Path</span> -Path <span style=color:#8be9fd;font-style:italic>$path</span> -ChildPath <span style=color:#f1fa8c>&#34;SharePointPnPPowerShell2019.psd1&#34;</span> 
+    <span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>$null</span> <span style=color:#ff79c6>-eq</span> (<span style=color:#8be9fd;font-style:italic>Get-Module</span>  -Name <span style=color:#f1fa8c>&#34;SharePointPnPPowerShell2019&#34;</span>)) {
+        <span style=color:#8be9fd;font-style:italic>Import-Module</span> <span style=color:#8be9fd;font-style:italic>$sharepointPowershellModulePath</span> -DisableNameChecking
+        <span style=color:#8be9fd;font-style:italic>Disable-PnPPowerShellTelemetry</span> -Force | <span style=color:#8be9fd;font-style:italic>Out-Null</span>
+    }
+    <span style=color:#6272a4>#Load SharePoint CSOM Assemblies</span>
+    <span style=color:#8be9fd;font-style:italic>Add-Type</span> -Path <span style=color:#f1fa8c>&#34;$path\Microsoft.SharePoint.Client.dll&#34;</span>
+    <span style=color:#8be9fd;font-style:italic>Add-Type</span> -Path <span style=color:#f1fa8c>&#34;$path\Microsoft.SharePoint.Client.Runtime.dll&#34;</span>
+    <span style=color:#8be9fd;font-style:italic>Add-Type</span> -Path <span style=color:#f1fa8c>&#34;$path\Microsoft.SharePoint.Client.Taxonomy.dll&#34;</span>
+    <span style=color:#8be9fd;font-style:italic>Add-Type</span> -Path <span style=color:#f1fa8c>&#34;$path\Microsoft.SharePoint.Client.Publishing.dll&#34;</span>
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Done&#34;</span> <span style=color:#ff79c6>-f</span> Green
+}
+
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#6272a4># Load PnP and Client Libraries</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#8be9fd;font-style:italic>Invoke-LoadPnp</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#6272a4># Connect</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#8be9fd;font-style:italic>$global:countTerms</span> = 0
+
+<span style=color:#8be9fd;font-style:italic>Connect-PnPOnline</span> -Url <span style=color:#8be9fd;font-style:italic>$siteurl</span> -CurrentCredentials
+<span style=color:#8be9fd;font-style:italic>$Web</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPWeb</span> -Includes Title, WebTemplate, Configuration
+
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#6272a4># Test Template</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Site </span>$(<span style=color:#8be9fd;font-style:italic>$Web</span>.Title)<span style=color:#f1fa8c>: </span>$(<span style=color:#8be9fd;font-style:italic>$Web</span>.WebTemplate)<span style=color:#f1fa8c>#</span>$(<span style=color:#8be9fd;font-style:italic>$Web</span>.Configuration)<span style=color:#f1fa8c> it should be STS#0&#34;</span>
+<span style=color:#ff79c6>if</span> (<span style=color:#8be9fd;font-style:italic>$Web</span>.WebTemplate <span style=color:#ff79c6>-ne</span> <span style=color:#f1fa8c>&#34;STS&#34;</span> <span style=color:#ff79c6>-and</span> <span style=color:#8be9fd;font-style:italic>$Web</span>.Configuration <span style=color:#ff79c6>-ne</span> 0) {
+    <span style=color:#8be9fd;font-style:italic>Write-Host</span> <span style=color:#f1fa8c>&#34;Wrong template&#34;</span> -ForegroundColor Red
+}
+
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#6272a4># Setup Features</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#8be9fd;font-style:italic>Invoke-SetupFeatures</span>
+
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#6272a4># Setup Termset</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#8be9fd;font-style:italic>Invoke-SetupTermSet</span> <span style=color:#8be9fd;font-style:italic>$termSetName</span>
+<span style=color:#8be9fd;font-style:italic>Invoke-UpdateTaxonomyCache</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#6272a4># Setup Navigation</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#8be9fd;font-style:italic>Invoke-SetupNavigation</span> <span style=color:#8be9fd;font-style:italic>$termSetName</span>
+<span style=color:#8be9fd;font-style:italic>Invoke-UpdateTaxonomyCache</span>
+
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#6272a4># Setup Tagging</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#8be9fd;font-style:italic>Invoke-EnableTagging</span> <span style=color:#8be9fd;font-style:italic>$termSetName</span>
+
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#6272a4># Create Content</span>
+<span style=color:#6272a4># -------------------------------------------------------------------------------------</span>
+<span style=color:#8be9fd;font-style:italic>$Ctx</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPContext</span>
+<span style=color:#8be9fd;font-style:italic>$PublishingWeb</span> = [Microsoft.SharePoint.Client.Publishing.PublishingWeb]::GetPublishingWeb(<span style=color:#8be9fd;font-style:italic>$Ctx</span>, <span style=color:#8be9fd;font-style:italic>$Ctx</span>.Web) 
+<span style=color:#8be9fd;font-style:italic>$Ctx</span>.Load(<span style=color:#8be9fd;font-style:italic>$PublishingWeb</span>)
+<span style=color:#8be9fd;font-style:italic>$Ctx</span>.ExecuteQuery()
+<span style=color:#8be9fd;font-style:italic>$PageLayoutItem</span> = <span style=color:#8be9fd;font-style:italic>Get-PageLayoutItem</span> <span style=color:#f1fa8c>&#39;ArticleLeft.aspx&#39;</span>
+<span style=color:#8be9fd;font-style:italic>$context</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPContext</span>
+<span style=color:#8be9fd;font-style:italic>$CurrentSite</span> = <span style=color:#8be9fd;font-style:italic>Get-PnPSite</span>
+<span style=color:#8be9fd;font-style:italic>$taxonomySession</span> = [Microsoft.SharePoint.Client.Taxonomy.TaxonomySession]::GetTaxonomySession(<span style=color:#8be9fd;font-style:italic>$context</span>)
+
+<span style=color:#8be9fd;font-style:italic>$termStore</span> = <span style=color:#8be9fd;font-style:italic>$taxonomySession</span>.GetDefaultSiteCollectionTermStore();
+<span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span> = <span style=color:#8be9fd;font-style:italic>$TermStore</span>.GetSiteCollectionGroup(<span style=color:#8be9fd;font-style:italic>$CurrentSite</span>, <span style=color:#8be9fd;font-style:italic>$false</span>)
+<span style=color:#8be9fd;font-style:italic>$termsets</span> = <span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span>.TermSets
+<span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$taxonomySession</span>)
+<span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$SiteCollectionTermGroup</span>)
+<span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$termsets</span>)
+<span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$TermStore</span>)
+<span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
+
+<span style=color:#8be9fd;font-style:italic>$termSet</span> = <span style=color:#8be9fd;font-style:italic>$termsets</span> | <span style=color:#8be9fd;font-style:italic>Where-Object</span> { <span style=color:#8be9fd;font-style:italic>$_</span>.Name <span style=color:#ff79c6>-eq</span> <span style=color:#8be9fd;font-style:italic>$termSetName</span> } 
+
+<span style=color:#8be9fd;font-style:italic>$context</span>.Load(<span style=color:#8be9fd;font-style:italic>$termSet</span>)
+<span style=color:#8be9fd;font-style:italic>Invoke-PnPQuery</span>
+<span style=color:#8be9fd;font-style:italic>Invoke-CreateTerms</span> -context <span style=color:#8be9fd;font-style:italic>$context</span> -PublishingWeb <span style=color:#8be9fd;font-style:italic>$PublishingWeb</span> -PageLayoutItem <span style=color:#8be9fd;font-style:italic>$PageLayoutItem</span> -termStore <span style=color:#8be9fd;font-style:italic>$termStore</span> -termObject <span style=color:#8be9fd;font-style:italic>$termSet</span> -path <span style=color:#f1fa8c>&#34;&#34;</span> -level 0 -maxlevel 3 -maxItemsPerLevel 30 -overallMax 3300 
+
+<span style=color:#8be9fd;font-style:italic>Invoke-UpdateTaxonomyCache</span>
+
+
+</code></pre></div><div class=post-author><div class=author-img><img alt="Mathias Osterkamp" src=https://conception365.com/img/mathiasosterkamp_half.png class="avatar avatar-100 photo" height=100 width=100></div><div class=author-content><h5><a href=/top/about/ title="Written by Mathias Osterkamp" rel=author>Mathias Osterkamp</a></h5><p>I've been working for about 10 years with a thematic focus on 'Collaboration' and 'Digital Transformation' especially in the product environment Microsoft on the topics Office 365, SharePoint, Azure and general web development.</p></div></div><ul class=pager><li class=previous><a href=https://conception365.com/post/2021-08-31-spfx-showcase-mysite/ data-toggle=tooltip data-placement=top title="SPFX Showcase - MySite">&larr;
+Previous Post<div class=pager-title>SPFX Showcase - MySite</div></a></li></ul><br><script src=https://utteranc.es/client.js repo=MathiasOsterkamp/conception365-com issue-term=url label=question theme=github-light crossorigin=anonymous issue-term=pathname async></script></div><div class="col-lg-4
+col-md-4
+sidebar-container"><h5>TOC</h5><nav id=TableOfContents><ul><li><a href=#managed-navigation-with-powershell>Managed Navigation with Powershell</a><ul><li><a href=#goal>Goal</a></li><li><a href=#preparation>Preparation</a></li><li><a href=#key-points>Key Points</a></li><li><a href=#content-not-crawled-by-search>Content not crawled by search</a></li><li><a href=#complete-script>Complete Script</a></li></ul></li></ul></nav><section><hr class="hidden-sm hidden-xs"><h5><a href=/tags/>FEATURED TAGS</a></h5><div class=tags><a href=/tags/managed-metadata title=managed-metadata>managed-metadata</a>
+<a href=/tags/pnp title=pnp>pnp</a>
+<a href=/tags/powerapps title=powerapps>powerapps</a>
+<a href=/tags/powershell title=powershell>powershell</a>
+<a href=/tags/sevdesk title=sevdesk>sevdesk</a>
+<a href=/tags/sharepoint title=sharepoint>sharepoint</a>
+<a href=/tags/sp2019 title=sp2019>sp2019</a>
+<a href=/tags/spfx title=spfx>spfx</a></div></section><section><hr><h5>RECENT POSTS</h5><ul class=side-newsfeed><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-11-01-powershell-create-navigation/ title="Powershell - Create Navigation" style=display:inline-block;background-image:url(/post/2021-11-01-powershell-create-navigation/header_hu57fad8182e36ba611e1f4a15b5e0c725_73932_120x0_resize_box_2.png)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-11-01-powershell-create-navigation/ rel=bookmark title="Powershell - Create Navigation">Powershell - Create Navigation</a></h4><span class=side-item-meta><time class="entry-date published">Monday, November 1, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-08-31-spfx-showcase-mysite/ title="SPFX Showcase - MySite" style=display:inline-block;background-image:url(/post/2021-08-31-spfx-showcase-mysite/header_hu08cc3da8430171f206449dcc5b7e02bb_59082_120x0_resize_box_2.png)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-08-31-spfx-showcase-mysite/ rel=bookmark title="SPFX Showcase - MySite">SPFX Showcase - MySite</a></h4><span class=side-item-meta><time class="entry-date published">Tuesday, August 31, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-08-13-spfx-2019-pnpm/ title="SPFX 2019 - speed up npm performance" style=display:inline-block;background-image:url(/post/2021-08-13-spfx-2019-pnpm/header_hucad760f47b2bf2a2bf8c8cbc7d6484e3_1088333_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-08-13-spfx-2019-pnpm/ rel=bookmark title="SPFX 2019 - speed up npm performance">SPFX 2019 - speed up npm performance</a></h4><span class=side-item-meta><time class="entry-date published">Friday, August 13, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-07-23-spse-first-review/ title="SharePoint Server Subscription Edition - First Review" style=display:inline-block;background-image:url(/post/2021-07-23-spse-first-review/header_hu4d9cda49ec06a7a986bf26a11c48cf59_23074_120x0_resize_box_2.png)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-07-23-spse-first-review/ rel=bookmark title="SharePoint Server Subscription Edition - First Review">SharePoint Server Subscription Edition - First Review</a></h4><span class=side-item-meta><time class="entry-date published">Friday, July 23, 2021</time></span></div></div></li><li class=penci-feed><div class=side-item><div class=side-image><a class="penci-image-holder penci-lazy small-fix-size" rel=bookmark href=https://conception365.com/post/2021-07-02-spfx-publish-classic-listforms/ title="Javascript - Publish classic list form webparts" style=display:inline-block;background-image:url(/post/2021-07-02-spfx-publish-classic-listforms/header_hu85d3c1c876d444d957e552a5fabdf1f3_1303364_120x0_resize_q75_box.jpg)></a></div><div class=side-item-text><h4 class=side-title-post><a href=https://conception365.com/post/2021-07-02-spfx-publish-classic-listforms/ rel=bookmark title="Javascript - Publish classic list form webparts">Javascript - Publish classic list form webparts</a></h4><span class=side-item-meta><time class="entry-date published">Friday, July 2, 2021</time></span></div></div></li></ul></section></div></div></div></article><footer><div class=container><div class=row><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center"><li><a href rel=alternate type=application/rss+xml title="Mathias Osterkamp"><span class=fa-stack><i class="fas fa-rss"></i></span>
+RSS</a></li><li><a href=mailto:mathias.osterkamp@conception365.com><span class=fa-stack><i class="fas fa-envelope"></i></span>
+Email</a></li><li><a href=/top/impressum/><span>Impressum</span></a></li><li><a href=/top/privacy/><span>Privacy Policy</span></a></li></ul><p class="copyright text-muted">Copyright &copy; Mathias Osterkamp 2021</p></div></div></div></footer></body></html>
